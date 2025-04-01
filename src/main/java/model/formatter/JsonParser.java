@@ -21,9 +21,9 @@ import java.util.*;
  */
 public final class JsonParser {
 
-    // Constant for the maximum number of ingredients to be parsed
+    // Constant for the maximum number of ingredients in a single recipe
     private static final int MAX_INGREDIENT_COUNT = 20;
-    // URL format for ingredient images
+    // URL format for ingredient image
     private static final String INGREDIENT_IMAGE = "www.themealdb.com/images/ingredients/%s-medium.png";
 
     // Private constructor to prevent instantiation
@@ -148,7 +148,7 @@ public final class JsonParser {
      * @throws IOException if an error occurs while reading or parsing the input stream
      */
     public static Set<String> allAreasList(InputStream input) throws IOException {
-//        InputStream input = ApiUtils.getAllAreas();
+        // InputStream input = ApiUtils.getAllAreas();
         Set<String> allAreas = new HashSet<>();
         ObjectMapper mapper = new ObjectMapper();
         JsonNode rootNode = mapper.readTree(input);
@@ -169,16 +169,16 @@ public final class JsonParser {
      * @throws IOException if an error occurs while reading or parsing the input stream
      */
     public static Set<String> allCategoriesList(InputStream input) throws IOException {
-//       InputStream input = ApiUtils.getAllCategories();
-       Set<String> allCategories = new HashSet<>();
-       ObjectMapper mapper = new ObjectMapper();
-       JsonNode rootNode = mapper.readTree(input);
-       JsonNode mealsNode = rootNode.path("meals");
-       if (mealsNode.isArray() && mealsNode.size() > 0) {
-           for (JsonNode category : mealsNode) {
-               allCategories.add(category.path("strCategory").asText());
-           }
-       }
+        // InputStream input = ApiUtils.getAllCategories();
+        Set<String> allCategories = new HashSet<>();
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode rootNode = mapper.readTree(input);
+        JsonNode mealsNode = rootNode.path("meals");
+        if (mealsNode.isArray() && mealsNode.size() > 0) {
+            for (JsonNode category : mealsNode) {
+                allCategories.add(category.path("strCategory").asText());
+            }
+        }
        return allCategories;
     }
 }
