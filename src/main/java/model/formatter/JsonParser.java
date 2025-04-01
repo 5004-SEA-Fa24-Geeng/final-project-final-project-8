@@ -1,8 +1,13 @@
 package model.formatter;
 
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import model.api.ApiUtils;
+
+import model.recipe.Ingredient;
+import model.recipe.Recipe;
+
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -126,7 +131,9 @@ public final class JsonParser {
                 String ingredientId = ingredient.path("idIngredient").asText();
                 String ingredientName = ingredient.path("strIngredient").asText();
                 String imageUrl = String.format(INGREDIENT_IMAGE, ApiUtils.castIngredientName(ingredientName));
-                Ingredient singleIngredient = Ingredient(ingredientId, ingredientName, imageUrl);
+
+                Ingredient singleIngredient = new Ingredient(ingredientId, ingredientName, imageUrl);
+
                 allIngredients.add(singleIngredient);
             }
         }
