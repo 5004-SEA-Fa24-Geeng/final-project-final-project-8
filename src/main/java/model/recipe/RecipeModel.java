@@ -1,6 +1,7 @@
 package model.recipe;
 
 import model.api.ApiUtils;
+import model.formatter.JsonParser;
 
 import java.io.IOException;
 import java.util.List;
@@ -24,7 +25,7 @@ public class RecipeModel implements IRecipeModel {
     private Set<String> categories;
 
 
-    public RecipeModel(Set<Ingredient> userIngredients) {
+    public RecipeModel(Set<Ingredient> userIngredients) throws IOException {
         // Convert InputStream to Set
         this.allIngredients = JsonParser.allIngredientsList(ApiUtils.getAllIngredients());
         this.areas = JsonParser.allAreasList(ApiUtils.getAllAreas());
@@ -38,17 +39,12 @@ public class RecipeModel implements IRecipeModel {
 
 
     /**
-     * Sets the set of new ingredients selected by the user.
+     * Sets the list of new ingredients selected by the user.
      *
      * @param userIngredients A list of {@code Ingredient} objects representing the user's selected ingredients.
      */
     @Override
-    public void setNewIngredients(Set<Ingredient> userIngredients) {
-        // For ingredient in userIngredients:
-        for (Ingredient ingr : userIngredients) {
-            // Call set<Recipe> groupRecipeByIngredient
-
-        }
+    public void setNewIngredients(List<Ingredient> userIngredients) {
 
     }
 
@@ -70,12 +66,8 @@ public class RecipeModel implements IRecipeModel {
      * @return A list of meal ID strings corresponding to meals that contain the given ingredient.
      */
     @Override
-    public List<String> getIdMealByIngredient(Set<String> userIngredients) throws IOException {
-        // ApiUtils: Set<Integer> getIdMealByIngredient(String ingredientName)
-        for (String ingr : userIngredients) {
-
-            ApiUtils.getIdMealByIngredient(ingr);
-        }
+    public List<String> getIdMealByIngredient(Ingredient ingredient) {
+        return List.of();
     }
 
     /**

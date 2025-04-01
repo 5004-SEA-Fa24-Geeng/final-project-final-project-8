@@ -61,45 +61,5 @@ public interface IRecipeModel {
     }
 }
 
-    /**
-     * Primary ingredient to pass around between objects.
-     * Is immutable and uses Jackson annotations for serialization.
-     *
-     * @param idIngredient the ID of the ingredient
-     * @param strIngredient the name of the recipe
-     * @param strImage the instructions of the recipe
-     * @return the ingredient
-     */
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    @JsonPropertyOrder({"idIngredient", "strIngredient", "strImage"})
-    record Ingredient(int idIngredient, String strIngredient, String strImage) {
-
-    }
 
 
-    /**
-     * Primary recipe to pass around between objects.
-     * Is immutable and uses Jackson annotations for serialization.
-     *
-     * @param recipeId the ID of the recipe
-     * @param recipeName the name of the recipe
-     * @param instructions the instructions of the recipe
-     * @param image the image of the recipe
-     * @param youtube the video link of the recipe
-     * @param category the category of the recipe
-     * @param area the area of the recipe
-     * @param ingredients the ingredients of the recipe
-     * @param measures the portion of the ingredient
-     * @return the recipe
-     */
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    @JsonPropertyOrder({"recipeId", "recipeName", "instructions", "image", "youtube",
-                        "category", "area", "ingredients", "measures"})
-
-    // return new Recipe(recipeId, recipeName, instructions, image, youtube, category, area, ingredients, measures);
-    record Recipe(int recipeId, String recipeName, String category, String area, String instructions,
-                  String youtube, String image, List<String> ingredients, List<String> measures) {
-
-    }
-
-}
