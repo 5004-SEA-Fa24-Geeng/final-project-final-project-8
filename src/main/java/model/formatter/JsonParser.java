@@ -62,17 +62,29 @@ public final class JsonParser {
         return recipeData;
     }
 
-    public static Recipe mapToRecipe(Map<String, Object> recipeData) {
-        int recipeId = (int) recipeData.get("recipeId");
-        String recipeName = (String) recipeData.get("recipeName");
-        String category = (String) recipeData.get("category");
-        String area = (String) recipeData.get("area");
-        String instructions = (String) recipeData.get("instructions");
-        String youtube = (String) recipeData.get("youtube");
-        String image = (String) recipeData.get("image");
-        List<String> ingredients = (List<String>) recipeData.get("ingredientsList");
-        List<String> measures = (List<String>) recipeData.get("measuresList");
+//    public static Recipe mapToRecipe(Map<String, Object> recipeData) {
+//        int recipeId = (int) recipeData.get("recipeId");
+//        String recipeName = (String) recipeData.get("recipeName");
+//        String category = (String) recipeData.get("category");
+//        String area = (String) recipeData.get("area");
+//        String instructions = (String) recipeData.get("instructions");
+//        String youtube = (String) recipeData.get("youtube");
+//        String image = (String) recipeData.get("image");
+//        List<String> ingredients = (List<String>) recipeData.get("ingredientsList");
+//        List<String> measures = (List<String>) recipeData.get("measuresList");
+//
+//        return new Recipe(recipeId, recipeName, instructions, image, youtube, category, area, ingredients, measures);
+//    }
+//
+//    public static Set<Ingredient> extractAllIngredients(InputStream input) {
+//        throw new UnsupportedOperationException("Not implemented yet");
+//    }
 
-        return new Recipe(recipeId, recipeName, instructions, image, youtube, category, area, ingredients, measures);
+    public static Set<String> extractAllAreas(InputStream input) {
+        throw new UnsupportedOperationException("Not implemented yet");
+    }
+
+    public static Set<String> extractAllCategories(InputStream input) {
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 }
