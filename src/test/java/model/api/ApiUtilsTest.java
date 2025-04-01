@@ -22,6 +22,14 @@ public class ApiUtilsTest {
     }
 
     @Test
+    public void testCastIngredientName() {
+        String ingredientName = "Chicken Breast";
+        String newIngredientName = ApiUtils.castIngredientName(ingredientName);
+        String expected = "chicken_breast";
+        assertEquals(expected, newIngredientName);
+    }
+
+    @Test
     public void testGetIdMealByIngredient() throws Exception {
         String json = "{ \"meals\": [ {\"idMeal\": \"52940\"}, {\"idMeal\": \"52846\"} ] }";
         InputStream mockInputStream = new ByteArrayInputStream(json.getBytes());

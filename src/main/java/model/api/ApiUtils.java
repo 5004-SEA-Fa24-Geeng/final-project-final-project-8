@@ -36,9 +36,13 @@ public final class ApiUtils {
     }
 
     public static Set<Integer> getIdMealByIngredient(String ingredientName) throws IOException {
-        String ingredientUrl = String.format(GET_IDMEAL, ingredientName);
+        String ingredientUrl = String.format(GET_IDMEAL, castIngredientName(ingredientName));
         InputStream data = getUrlContents(ingredientUrl);
         return JsonParser.extractIdMeal(data);
+    }
+
+    public static String castIngredientName(String ingredientName) {
+        return ingredientName.replace(" ", "_").toLowerCase();
     }
 
     public static InputStream getRecipeByIdMeal(int idMeal) {
