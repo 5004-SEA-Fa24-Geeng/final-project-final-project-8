@@ -11,6 +11,26 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class JsonParserTest {
 
+    private static final String AREAS_JSON = """
+        {
+            "meals": [
+                {"strArea": "American"},
+                {"strArea": "Italian"},
+                {"strArea": "Mexican"}
+            ]
+        }
+    """;
+
+    private static final String CATEGORIES_JSON = """
+        {
+            "meals": [
+                {"strCategory": "Dessert"},
+                {"strCategory": "Seafood"},
+                {"strCategory": "Vegetarian"}
+            ]
+        }
+    """;
+
     @Test
     void extractIdMeal() throws IOException {
         // Test data in JSON format
@@ -32,5 +52,19 @@ class JsonParserTest {
         assertTrue(mealIds.contains(52846));
     }
 
+    @Test
+    void testAllAreasList() throws IOException {
+        InputStream inputStream = new ByteArrayInputStream(AREAS_JSON.getBytes());
+        Set<String> result = JsonParser.allAreasList(inputStream);
+        assertNotNull(result);
+        assertEquals(Set.of("American", "Italian", "Mexican"), result);
+    }
 
+    @Test
+    void testAllCategoriesList() throws IOException {
+        InputStream inputStream = new ByteArrayInputStream(CATEGORIES_JSON.getBytes());
+        Set<String> result = JsonParser.allCategoriesList(inputStream);
+        assertNotNull(result);
+        assertEquals(Set.of("Dessert", "Seafood", "Vegetarian"), result);
+    }
 }
