@@ -3,6 +3,7 @@ package model.formatter;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import model.api.ApiUtils;
 
 
 import java.io.IOException;
@@ -11,6 +12,7 @@ import java.util.*;
 
 public final class JsonParser {
     private static final int MAX_INGREDIENT_COUNT = 20;
+    private static final String INGREDIENT_IMAGE = "www.themealdb.com/images/ingredients/%s-medium.png";
 
     private JsonParser() {
         //empty
@@ -64,29 +66,63 @@ public final class JsonParser {
         return recipeData;
     }
 
-//    public static Recipe mapToRecipe(Map<String, Object> recipeData) {
-//        int recipeId = (int) recipeData.get("recipeId");
-//        String recipeName = (String) recipeData.get("recipeName");
-//        String category = (String) recipeData.get("category");
-//        String area = (String) recipeData.get("area");
-//        String instructions = (String) recipeData.get("instructions");
-//        String youtube = (String) recipeData.get("youtube");
-//        String image = (String) recipeData.get("image");
-//        List<String> ingredients = (List<String>) recipeData.get("ingredientsList");
-//        List<String> measures = (List<String>) recipeData.get("measuresList");
-//
-//        return new Recipe(recipeId, recipeName, instructions, image, youtube, category, area, ingredients, measures);
-//    }
-//
-//    public static Set<Ingredient> extractAllIngredients(InputStream input) {
-//        throw new UnsupportedOperationException("Not implemented yet");
-//    }
+    public static Recipe mapToRecipe(Map<String, Object> recipeData) {
+        int recipeId = (int) recipeData.get("recipeId");
+        String recipeName = (String) recipeData.get("recipeName");
+        String category = (String) recipeData.get("category");
+        String area = (String) recipeData.get("area");
+        String instructions = (String) recipeData.get("instructions");
+        String youtube = (String) recipeData.get("youtube");
+        String image = (String) recipeData.get("image");
+        List<String> ingredients = (List<String>) recipeData.get("ingredientsList");
+        List<String> measures = (List<String>) recipeData.get("measuresList");
 
-    public static Set<String> extractAllAreas(InputStream input) {
-        throw new UnsupportedOperationException("Not implemented yet");
+        return new Recipe(recipeId, recipeName, instructions, image, youtube, category, area, ingredients, measures);
     }
 
-    public static Set<String> extractAllCategories(InputStream input) {
-        throw new UnsupportedOperationException("Not implemented yet");
+    public static Set<Ingredient> allIngredientsList(InputStream input) throws IOException {
+        // Ingredient(int idIngredient, String strIngredient, String strImage)
+        Set<Ingredient> allIngredients = new HashSet<>();
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode rootNode = mapper.readTree(input);
+        JsonNode mealsNode = rootNode.path("meals");
+        if (mealsNode.isArray() && mealsNode.size() > 0) {
+            for (JsonNode ingredient : mealsNode) {
+                String ingredientId = ingredient.path("idIngredient").asText();
+                String ingredientName = ingredient.path("strIngredient").asText();
+                String imageUrl = String.format(INGREDIENT_IMAGE, ApiUtils.castIngredientName(ingredientName));
+                Ingredient singleIngredient = Ingredient(ingredientId, ingredientName, imageUrl);
+                allIngredients.add(singleIngredient);
+            }
+        }
+        return allIngredients;
+    }
+
+    public static Set<String> allAreasList(InputStream input) throws IOException {
+//        InputStream input = ApiUtils.getAllAreas();
+        Set<String> allAreas = new HashSet<>();
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode rootNode = mapper.readTree(input);
+        JsonNode mealsNode = rootNode.path("meals");
+        if (mealsNode.isArray() && mealsNode.size() > 0) {
+            for (JsonNode area : mealsNode) {
+                allAreas.add(area.path("strArea").asText());
+            }
+        }
+        return allAreas;
+    }
+
+    public static Set<String> allCategoriesList(InputStream input) throws IOException {
+//       InputStream input = ApiUtils.getAllCategories();
+       Set<String> allCategories = new HashSet<>();
+       ObjectMapper mapper = new ObjectMapper();
+       JsonNode rootNode = mapper.readTree(input);
+       JsonNode mealsNode = rootNode.path("meals");
+       if (mealsNode.isArray() && mealsNode.size() > 0) {
+           for (JsonNode category : mealsNode) {
+               allCategories.add(category.path("strCategory").asText());
+           }
+       }
+       return allCategories;
     }
 }
