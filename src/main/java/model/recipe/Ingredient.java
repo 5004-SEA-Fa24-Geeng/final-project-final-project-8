@@ -6,12 +6,12 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder; /**
      * Is immutable and uses Jackson annotations for serialization.
      *
      * @param idIngredient the ID of the ingredient
-     * @param strIngredient the name of the recipe
+     * @param nameIngredient the name of the recipe
      * @param strImage the instructions of the recipe
      * @return the ingredient
      */
     @JsonIgnoreProperties(ignoreUnknown = true)
-    @JsonPropertyOrder({"idIngredient", "strIngredient", "strImage"})
-    public record Ingredient(String idIngredient, String strIngredient, String strImage) {
+    @JsonPropertyOrder({"idIngredient", "nameIngredient", "strImage"})
+    public record Ingredient(String idIngredient, String nameIngredient, String strImage) {
 
     }

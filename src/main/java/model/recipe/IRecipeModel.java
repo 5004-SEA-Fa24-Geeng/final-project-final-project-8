@@ -3,18 +3,40 @@ package model.recipe;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
 public interface IRecipeModel {
 
     /**
+     * The method to be called in Controller.
+     * */
+    void processRecipes() throws IOException;
+
+    /**
      * Sets the list of new ingredients selected by the user.
      *
      * @param userIngredients A list of {@code Ingredient} objects representing the user's selected ingredients.
      */
-    void setNewIngredients(List<Ingredient> userIngredients);
+    void setNewIngredients(Set<Ingredient> userIngredients);
 
+
+    /**
+     * Retrieves a set of meal IDs that contain specific ingredients.
+     *
+     * @param userIngredients The {@code Ingredient} that user selected.
+     * @return A list of meal ID strings corresponding to meals that contain the given ingredient.
+     */
+    Set<Integer> getIdMealByIngredient(Set<Ingredient> userIngredients) throws IOException;
+
+
+    /**
+     * Update recipes from idMeals.
+     * @param idMeals A Set of idMeals to be looked up recipes
+     *
+     * */
+    void setRecipesByIdMeal(Set<Integer> idMeals) throws IOException;
 
     /**
      * Groups recipes that contain a specific ingredient.
@@ -24,13 +46,7 @@ public interface IRecipeModel {
      */
     Set<Recipe> groupRecipeByIngredient(Ingredient ingredient);
 
-    /**
-     * Retrieves a list of meal IDs that contain a specific ingredient.
-     *
-     * @param ingredient The {@code Ingredient} used to search for meal IDs.
-     * @return A list of meal ID strings corresponding to meals that contain the given ingredient.
-     */
-    List<String> getIdMealByIngredient(Ingredient ingredient);
+
 
     /**
      * Retrieves a recipe based on a given meal ID.

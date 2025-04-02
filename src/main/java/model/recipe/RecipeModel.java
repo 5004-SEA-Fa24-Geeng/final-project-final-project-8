@@ -4,7 +4,9 @@ import model.api.ApiUtils;
 import model.formatter.JsonParser;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class RecipeModel implements IRecipeModel {
@@ -13,10 +15,10 @@ public class RecipeModel implements IRecipeModel {
     private Set<Ingredient> allIngredients;
 
     /** A set of ingredients the user selected. */
-    private Set<Ingredient> userIngredients;
+    Set<Ingredient> userIngredients;
 
     /** A set of recipes based on user-selected ingredients. */
-    private Set<Recipe> recipes;
+    Set<Recipe> recipes;
 
     /** A set of all areas. */
     private Set<String> areas;
@@ -37,6 +39,16 @@ public class RecipeModel implements IRecipeModel {
         }
     }
 
+    /**
+     * Method to be called in Controller.
+     * */
+    @Override
+    public void processRecipes() throws IOException {
+        setNewIngredients(this.userIngredients);
+        Set<Integer> allIdMeals =getIdMealByIngredient(this.userIngredients);
+        setRecipesByIdMeal(allIdMeals);
+    }
+
 
     /**
      * Sets the list of new ingredients selected by the user.
@@ -44,8 +56,47 @@ public class RecipeModel implements IRecipeModel {
      * @param userIngredients A list of {@code Ingredient} objects representing the user's selected ingredients.
      */
     @Override
-    public void setNewIngredients(List<Ingredient> userIngredients) {
+    public void setNewIngredients(Set<Ingredient> userIngredients) {
+        this.userIngredients = userIngredients;
+    }
 
+
+    /**
+     * Retrieves a list of meal IDs that contain a specific ingredient.
+     *
+     * @param userIngredients The iIngredients that user selected.
+     * @return A set of meal IDs corresponding to meals that contain the given ingredients.
+     */
+    @Override
+    public Set<Integer> getIdMealByIngredient(Set<Ingredient> userIngredients) throws IOException {
+        Set<Integer> allIdMeals = new HashSet<>();
+        for (Ingredient ingr : userIngredients) {
+            allIdMeals.addAll(ApiUtils.getIdMealByIngredient(ingr.nameIngredient()));
+        }
+
+        return allIdMeals;
+    }
+
+    @Override
+    public void setRecipesByIdMeal(Set<Integer> idMeals) throws IOException {
+        for (int id : idMeals) {
+            // get recipe data and map: Map<String, Object> extractRecipeData(InputStream input)
+            Map<String, Object> recipeData = JsonParser.extractRecipeData(ApiUtils.getRecipeByIdMeal(id));
+            // get recipe object: Recipe mapToRecipe(Map<String, Object> recipeData)
+            Recipe recipeObj = JsonParser.mapToRecipe(recipeData);
+            this.recipes.add(recipeObj);
+        }
+    }
+
+    /**
+     * Retrieves a recipe based on a given meal ID.
+     *
+     * @param idMeal A set of meal ids.
+     * @return A {@code Recipe} object corresponding to the given meal ID, or {@code null} if not found.
+     */
+    @Override
+    public Recipe getRecipeByIdMeal(int idMeal) {
+        return null; // to be discussed
     }
 
     /**
@@ -56,28 +107,7 @@ public class RecipeModel implements IRecipeModel {
      */
     @Override
     public Set<Recipe> groupRecipeByIngredient(Ingredient ingredient) {
-        return Set.of();
+        return Set.of(); // to be discussed
     }
 
-    /**
-     * Retrieves a list of meal IDs that contain a specific ingredient.
-     *
-     * @param ingredient The {@code Ingredient} used to search for meal IDs.
-     * @return A list of meal ID strings corresponding to meals that contain the given ingredient.
-     */
-    @Override
-    public List<String> getIdMealByIngredient(Ingredient ingredient) {
-        return List.of();
-    }
-
-    /**
-     * Retrieves a recipe based on a given meal ID.
-     *
-     * @param idMeal The unique identifier of the meal.
-     * @return A {@code Recipe} object corresponding to the given meal ID, or {@code null} if not found.
-     */
-    @Override
-    public Recipe getRecipeByIdMeal(int idMeal) {
-        return null;
-    }
 }
