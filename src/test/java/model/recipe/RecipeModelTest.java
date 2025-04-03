@@ -22,8 +22,8 @@ class RecipeModelTest {
         testUserIngredients.add(new Ingredient("1", "Chicken", ""));
         testUserIngredients.add(new Ingredient("2", "Garlic", ""));
 
-        // Initialize RecipeModel with test ingredients
-        recipeModel = new RecipeModel(testUserIngredients);
+//        // Initialize RecipeModel with test ingredients
+//        recipeModel = new RecipeModel(testUserIngredients);
     }
 
     @Test
