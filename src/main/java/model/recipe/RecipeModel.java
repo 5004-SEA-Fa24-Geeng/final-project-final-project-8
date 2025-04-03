@@ -14,29 +14,41 @@ public class RecipeModel implements IRecipeModel {
     /** A set of all ingredients. */
     private Set<Ingredient> allIngredients;
 
+    /** A set of all areas. */
+    private Set<String> allAreas;
+
+    /** A set of all categories. */
+    private Set<String> allCategories;
+
     /** A set of ingredients the user selected. */
     Set<Ingredient> userIngredients;
 
-    /** A set of recipes based on user-selected ingredients. */
-    Set<Recipe> recipes;
+    /** The category that the user selected. */
+    String userCategory;
 
-    /** A set of all areas. */
-    private Set<String> areas;
-
-    /** A set of all categories. */
-    private Set<String> categories;
+    /** The area that the user selected. */
+    String userArea;
 
 
-    public RecipeModel(Set<Ingredient> userIngredients) throws IOException {
+
+
+    public RecipeModel() throws IOException {
+        // Before entering the page, the model has been initialized (with a null userIngredients)
         // Convert InputStream to Set
         this.allIngredients = JsonParser.allIngredientsList(ApiUtils.getAllIngredients());
-        this.areas = JsonParser.allAreasList(ApiUtils.getAllAreas());
-        this.categories = JsonParser.allCategoriesList(ApiUtils.getAllCategories());
+        this.allAreas = JsonParser.allAreasList(ApiUtils.getAllAreas());
+        this.allCategories = JsonParser.allCategoriesList(ApiUtils.getAllCategories());
 
-        // Before entering the page, the model has been initialized (with a null userIngredients)
-        if (userIngredients != null) {
-            this.userIngredients = userIngredients;
-        }
+//        // from user input
+//        this.userIngredients = userIngredients;
+//        this.userCategory = userCategory;
+//        this.userArea = userArea;
+
+
+//        if (userArea != null) {
+//
+//        }
+
     }
 
     /**
@@ -44,7 +56,10 @@ public class RecipeModel implements IRecipeModel {
      * */
     @Override
     public void processRecipes() throws IOException {
-        setNewIngredients(this.userIngredients);
+        if (this.userIngredients != null) {
+            setNewIngredients(this.userIngredients);
+        }
+
         Set<Integer> allIdMeals =getIdMealByIngredient(this.userIngredients);
         setRecipesByIdMeal(allIdMeals);
     }

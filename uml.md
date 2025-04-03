@@ -61,13 +61,22 @@ classDiagram
     }
     
     class RecipeModel {
+        - allIngredients: Set<Ingredient>
+        - allCategories: Set<String>
+        - allAreas: Set<String>
+        - userIngredients: Set<Ingredient>
+        - userCategory: String
+        - userArea: String
+        - mealOptions: Set<Meal>
+        
         + processRecipes() : void
         + setNewIngredients(Set~Ingredient~ userIngredients) : void
+        
         + getMealsByIngredients(Ingredient ingredient): Set<Meal>
         + getMealsByCategory(String category): Set<Meal>
         + getMealsByArea(String area): Set<Meal>
-        + getMutualMeals(Set<Meal> ingredientMealSet, Set<Meal> categoryMealSet, Set<Meal> areaMealSet): Set<Meal>
         
+        + getMutualMeals(Set<Meal> mealSet1, Set<Meal> mealSet2): Set<Meal>
         + getRecipeByIdMeal(int idMeal) : Recipe
         
     }
@@ -76,6 +85,7 @@ classDiagram
         + processUserIngredients(): void
         + processUserCategory(): void
         + processUserArea(): void
+        + processUserMeal(): void
     }
     
     
