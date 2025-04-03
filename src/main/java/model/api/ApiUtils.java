@@ -1,6 +1,8 @@
 package model.api;
 
 import model.formatter.JsonParser;
+import model.recipe.IRecipeModel;
+import model.recipe.Meal;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -72,6 +74,12 @@ public final class ApiUtils {
         String ingredientUrl = String.format(GET_IDMEAL, castIngredientName(ingredientName));
         InputStream data = getUrlContents(ingredientUrl);
         return JsonParser.extractIdMeal(data);
+    }
+
+    public static Set<Meal> getMealsByIngredient(String ingredientName) throws IOException {
+        String ingredientUrl = String.format(GET_IDMEAL, castIngredientName(ingredientName));
+        InputStream data = getUrlContents(ingredientUrl);
+        return JsonParser.extractMeals(data);
     }
 
     /**

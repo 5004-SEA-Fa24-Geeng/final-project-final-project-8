@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import model.api.ApiUtils;
 
 import model.recipe.Ingredient;
+import model.recipe.Meal;
 import model.recipe.Recipe;
 
 
@@ -50,6 +51,23 @@ public final class JsonParser {
             }
         }
         return mealIds;
+    }
+
+    public static Set<Meal> extractMeals(InputStream input) throws IOException {
+        Set<Meal> meals = new HashSet<>();
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode rootNode = mapper.readTree(input);
+        JsonNode mealsNode = rootNode.path("meals");
+        if (mealsNode.isArray() && mealsNode.size() > 0) {
+            for (JsonNode meal : mealsNode) {
+                String mealName = meal.path("strMeal").asText();
+                String mealImg = meal.path("strMealThumb").asText();
+                String idMeal = meal.path("idMeal").asText();
+                Meal singleMeal = new Meal(mealName, mealImg, idMeal);
+                meals.add(singleMeal);
+            }
+        }
+        return meals;
     }
 
     /**
