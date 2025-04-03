@@ -10,71 +10,95 @@ import java.util.Set;
 public interface IRecipeModel {
 
     /**
-     * The method to be called in Controller.
+     * Get all ingredients from online API.
      * */
-    void processRecipes() throws IOException;
+    Set<Ingredient> getAllIngredients() throws IOException;
+
+    /**
+     * Get all categories from online API.
+     * */
+    Set<String> getAllCategories() throws IOException;
+
+    /**
+     * Get all areas from online API.
+     * */
+    Set<String> getAllAreas() throws IOException;
+
+    /** Get the meals based on user input */
+    Set<Meal> processMeals(Set<Ingredient> userIngredients, String category, String area) throws IOException;
+
+
+    /** Find the intersection of multiple meal sets.*/
+    Set<Meal> findIntersection(List<Set<Meal>> mealSets);
 
     /**
      * Sets the list of new ingredients selected by the user.
      *
      * @param userIngredients A list of {@code Ingredient} objects representing the user's selected ingredients.
      */
-    void setNewIngredients(Set<Ingredient> userIngredients);
+    void setUserIngredients(Set<Ingredient> userIngredients);
+
+    /**
+     * Sets the category that the user selected.
+     *
+     * @param category The category that the user selected.
+     */
+    void setUserCategory(String category);
+
+    /**
+     * Sets the area that the user selected.
+     *
+     * @param area The category that the user selected.
+     */
+    void setUserArea(String area);
+
 
 
     /**
-     * Retrieves a set of meal IDs that contain specific ingredients.
+     * Get a set of meal objects that contain specific ingredients.
      *
      * @param userIngredients The {@code Ingredient} that user selected.
-     * @return A list of meal ID strings corresponding to meals that contain the given ingredient.
+     * @return A set of meal objects corresponding to that contain the given ingredient.
      */
-    Set<Integer> getIdMealByIngredient(Set<Ingredient> userIngredients) throws IOException;
+    Set<Meal> getMealsByIngredient(Set<Ingredient> userIngredients) throws IOException;
+
+    /**
+     * Get a set of meal objects that belongs to specific category.
+     *
+     * @param category the category that user selected.
+     * @return A set of meal objects corresponding to that contain the given category.
+     */
+    Set<Meal> getMealsByCategory(String category) throws IOException;
+
+    /**
+     * Get a set of meal objects that belongs to specific area.
+     *
+     * @param area the area that user selected.
+     * @return A set of meal objects corresponding to that contain the given area.
+     */
+    Set<Meal> getMealsByArea(String area) throws IOException;
 
 
     /**
-     * Update recipes from idMeals.
-     * @param idMeals A Set of idMeals to be looked up recipes
+     * Get meals which exist in both given sets.
      *
-     * */
-    void setRecipesByIdMeal(Set<Integer> idMeals) throws IOException;
-
-    /**
-     * Groups recipes that contain a specific ingredient.
-     *
-     * @param ingredient The {@code Ingredient} used to filter recipes.
-     * @return A set of {@code Recipe} objects that include the specified ingredient.
+     * @param mealSet1 the first given set of meals
+     * @param mealSet2 the second given set of meals
+     * @return A set of meal objects that exist in both given sets
      */
-    Set<Recipe> groupRecipeByIngredient(Ingredient ingredient);
+    Set<Meal> getMutualMeals(Set<Meal> mealSet1, Set<Meal> mealSet2, Set<Meal> mealSet3);
 
 
 
     /**
      * Retrieves a recipe based on a given meal ID.
      *
-     * @param idMeal The unique identifier of the meal.
-     * @return A {@code Recipe} object corresponding to the given meal ID, or {@code null} if not found.
+     * @param idMeal The unique identifier of the meal that the user selected.
+     * @return A {@code Recipe} object corresponding to the given meal ID.
      */
-    Recipe getRecipeByIdMeal(int idMeal);
+    Recipe getRecipeByIdMeal(int idMeal) throws IOException;
 
 
-    /**
-     * Gets an instance of the IRecipeModel.
-     * <p>
-     * This method provides access to a singleton instance of the IRecipeModel. The implementation
-     * of this method should ensure that only one instance of the model is created and used throughout
-     * the application.
-     * </p>
-     * <p>
-     * Typically, this method should load the model or initialize it if it hasn't been created already.
-     * The implementation details will depend on the specific model being used.
-     * </p>
-     *
-     * @return the instance of the IRecipeModel
-     * @throws UnsupportedOperationException if the method is not implemented yet
-     */
-    static IRecipeModel getInstance() {
-        throw new UnsupportedOperationException("Not implemented yet");
-    }
 }
 
 
