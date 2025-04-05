@@ -10,13 +10,13 @@ import java.util.stream.Collectors;
 public class RecipeModel implements IRecipeModel {
 
     /** A set of all ingredients. */
-    private Set<Ingredient> allIngredients;
+    private final Set<Ingredient> allIngredients;
 
     /** A set of all areas. */
-    private Set<String> allAreas;
+    private final Set<String> allAreas;
 
     /** A set of all categories. */
-    private Set<String> allCategories;
+    private final Set<String> allCategories;
 
     /** A set of ingredients the user selected. */
     Set<Ingredient> userIngredients;
@@ -75,7 +75,7 @@ public class RecipeModel implements IRecipeModel {
         // collect all non-empty meal sets
         List<Set<Meal>> mealSets = new ArrayList<>();
 
-        // get meals if user inputs that field
+        // get meals only if user inputs that field
         if (this.userIngredients != null) {
             mealSets.add(getMealsByIngredient(userIngredients));
         }
@@ -87,14 +87,11 @@ public class RecipeModel implements IRecipeModel {
         }
 
         // handle different cases of user inputs
-        switch (mealSets.size()) {
-            case 0:
-                return Collections.emptySet();
-            case 1:
-                return mealSets.get(0);
-            default:
-                return findIntersection(mealSets);
-        }
+        return switch (mealSets.size()) {
+            case 0 -> Collections.emptySet();
+            case 1 -> mealSets.get(0);
+            default -> findIntersection(mealSets);
+        };
     }
 
     /** Find the intersection of multiple meal sets.*/
@@ -150,7 +147,11 @@ public class RecipeModel implements IRecipeModel {
      */
     @Override
     public Set<Meal> getMealsByIngredient(Set<Ingredient> userIngredients) throws IOException {
-        return Set.of();  // not yet implemented
+        Set<Meal> mealSetOfUserIngredients = new HashSet<>();
+        for (Ingredient ingredient : userIngredients) {
+            mealSetOfUserIngredients.addAll(ApiUtils.getMealsByIngredient(ingredient.nameIngredient()));
+        }
+        return mealSetOfUserIngredients;
     }
 
     /**
@@ -161,7 +162,8 @@ public class RecipeModel implements IRecipeModel {
      */
     @Override
     public Set<Meal> getMealsByCategory(String category) throws IOException {
-        return Set.of();  // not yet implemented
+        return Set.of();  // to be implemented as below
+//        return ApiUtils.getMealsByCategory(category);
     }
 
     /**
@@ -172,7 +174,8 @@ public class RecipeModel implements IRecipeModel {
      */
     @Override
     public Set<Meal> getMealsByArea(String area) throws IOException {
-        return Set.of();  // not yet implemented
+        return Set.of();  // to be implemented as below
+//        return ApiUtils.getMealsByArea(area);
     }
 
     /**
@@ -184,11 +187,10 @@ public class RecipeModel implements IRecipeModel {
      */
     @Override
     public Set<Meal> getMutualMeals(Set<Meal> mealSet1, Set<Meal> mealSet2, Set<Meal> mealSet3) {
-        Set<Meal> mutualMeals = mealSet1.stream()
+        return mealSet1.stream()
                 .filter(mealSet2::contains)
                 .filter(mealSet3::contains)
                 .collect(Collectors.toSet());
-        return mutualMeals;
     }
 
 
@@ -203,8 +205,7 @@ public class RecipeModel implements IRecipeModel {
         // get recipe data and map: Map<String, Object> extractRecipeData(InputStream input)
         Map<String, Object> recipeData = JsonParser.extractRecipeData(ApiUtils.getRecipeByIdMeal(idMeal));
         // get recipe object: Recipe mapToRecipe(Map<String, Object> recipeData)
-        Recipe recipeObj = JsonParser.mapToRecipe(recipeData);
-        return recipeObj;
+        return JsonParser.mapToRecipe(recipeData);
     }
 
 }
