@@ -2,6 +2,9 @@ package model.recipe;
 
 import model.api.ApiUtils;
 import model.formatter.JsonParser;
+import model.recipe.strategy.GetMealByArea;
+import model.recipe.strategy.GetMealByCategory;
+import model.recipe.strategy.GetMealByIngredient;
 
 import java.io.IOException;
 import java.util.*;
@@ -32,6 +35,9 @@ public class RecipeModel implements IRecipeModel {
 
     /** List of Observers detects new user submissions. */
     private final List<Observer> observers = new ArrayList<>();
+
+    /** the instance of cached fetcher. */
+    private final CachedMealFetcher cachedMealFetcher = new CachedMealFetcher();
 
     private RecipeModel() throws IOException {
         // Before entering the page, the model has been initialized (with a null userIngredients)
@@ -102,17 +108,17 @@ public class RecipeModel implements IRecipeModel {
 
         // if the user selected ingredients, apply IngredientFilterStrategy
         if (this.userIngredients != null) {
-            mealSets.add(new IngredientFilterStrategy(this.userIngredients).filter());
+            mealSets.add(new GetMealByIngredient(this.userIngredients, cachedMealFetcher).getMeals());
         }
 
         // if the user selected a category, apply CategoryFilterStrategy
         if (this.userCategory != null) {
-            mealSets.add(new CategoryFilterStrategy(this.userCategory).filter());
+            mealSets.add(new GetMealByCategory(this.userCategory, cachedMealFetcher).getMeals());
         }
 
         // if the user selected an area, apply AreaFilterStrategy
         if (this.userArea != null) {
-            mealSets.add(new AreaFilterStrategy(this.userArea).filter());
+            mealSets.add(new GetMealByArea(this.userArea, cachedMealFetcher).getMeals());
         }
 
         // handle different cases of user inputs
@@ -172,42 +178,36 @@ public class RecipeModel implements IRecipeModel {
     }
 
     /**
-     * Get a set of meal objects that contain specific ingredients.
-     *
-     * @param userIngredients The {@code Ingredient} that user selected.
-     * @return A set of meal objects corresponding to that contain the given ingredient.
+     * Get meals that contain specific ingredients.
+     * @param userIngredients The ingredients selected by the user.
+     * @return A set of meals matching those ingredients.
+     * @throws IOException If API call fails.
      */
     @Override
     public Set<Meal> getMealsByIngredient(Set<Ingredient> userIngredients) throws IOException {
-        Set<Meal> mealSetOfUserIngredients = new HashSet<>();
-        for (Ingredient ingredient : userIngredients) {
-            mealSetOfUserIngredients.addAll(ApiUtils.getMealsByIngredient(ingredient.nameIngredient()));
-        }
-        return mealSetOfUserIngredients;
+        return cachedMealFetcher.getMealsByIngredient(userIngredients);
     }
 
     /**
-     * Get a set of meal objects that belongs to specific category.
-     *
-     * @param category the category that user selected.
-     * @return A set of meal objects corresponding to that contain the given category.
+     * Get meals that belong to a specific category.
+     * @param category The selected category.
+     * @return A set of meals in that category.
+     * @throws IOException If API call fails.
      */
     @Override
     public Set<Meal> getMealsByCategory(String category) throws IOException {
-        return Set.of();  // to be implemented as below
-//        return ApiUtils.getMealsByCategory(category);
+        return cachedMealFetcher.getMealsByCategory(category);
     }
 
     /**
-     * Get a set of meal objects that belongs to specific area.
-     *
-     * @param area the area that user selected.
-     * @return A set of meal objects corresponding to that contain the given area.
+     * Get meals that belong to a specific area.
+     * @param area The selected area.
+     * @return A set of meals in that area.
+     * @throws IOException If API call fails.
      */
     @Override
     public Set<Meal> getMealsByArea(String area) throws IOException {
-        return Set.of();  // to be implemented as below
-//        return ApiUtils.getMealsByArea(area);
+        return cachedMealFetcher.getMealsByArea(area);
     }
 
     /**
@@ -240,36 +240,53 @@ public class RecipeModel implements IRecipeModel {
         return JsonParser.mapToRecipe(recipeData);
     }
 
-    public class IngredientFilterStrategy implements MealFilterStrategy {
-        private final Set<Ingredient> ingredients;
-        public IngredientFilterStrategy(Set<Ingredient> ingredients) {
-            this.ingredients = ingredients;
-        }
-        @Override
-        public Set<Meal> filter() throws IOException {
-            return getMealsByIngredient(ingredients);
-        }
-    }
+    /** Nested class for caching. */
+    public static class CachedMealFetcher {
+        private final Map<String, Set<Meal>> ingredientCache = new HashMap<>();
+        private final Map<String, Set<Meal>> categoryCache = new HashMap<>();
+        private final Map<String, Set<Meal>> areaCache = new HashMap<>();
 
-    public class CategoryFilterStrategy implements MealFilterStrategy {
-        private final String category;
-        public CategoryFilterStrategy(String category) {
-            this.category = category;
-        }
-        @Override
-        public Set<Meal> filter() throws IOException {
-            return getMealsByCategory(category);
-        }
-    }
+        public Set<Meal> getMealsByIngredient(Set<Ingredient> userIngredients) throws IOException {
+            Set<Meal> mealSetOfUserIngredients = new HashSet<>();
 
-    public class AreaFilterStrategy implements MealFilterStrategy {
-        private final String area;
-        public AreaFilterStrategy(String area) {
-            this.area = area;
+            for (Ingredient ingredient : userIngredients) {
+                String existingName = ingredient.nameIngredient();
+                Set<Meal> mealSet = ingredientCache.computeIfAbsent(existingName, newName -> {
+                    try {
+                        return ApiUtils.getMealsByIngredient(newName);
+                    } catch (IOException e) {
+                        return Set.of();
+                    }
+                });
+                mealSetOfUserIngredients.addAll(mealSet);
+            }
+            return mealSetOfUserIngredients;
         }
-        @Override
-        public Set<Meal> filter() throws IOException {
-            return getMealsByArea(area);
+
+        public Set<Meal> getMealsByCategory(String category) throws IOException {
+            return categoryCache.computeIfAbsent(category, c -> {
+                // Using mock data before ApiUtils.getMealsByCategory is implemented.
+                Meal mockMeal = new Meal("MockCategoryMeal", "https://example.com/image.jpg", "12345");
+                return Set.of(mockMeal);
+//                try {
+//                    return ApiUtils.getMealsByCategory(c);
+//                } catch (IOException e) {
+//                    return Set.of();
+//                }
+            });
+        }
+
+        public Set<Meal> getMealsByArea(String area) throws IOException {
+            return areaCache.computeIfAbsent(area, a -> {
+                // Using mock data before ApiUtils.getMealsByArea is implemented.
+                Meal mockMeal = new Meal("MockAreaMeal", "https://example.com/image2.jpg", "67890");
+                return Set.of(mockMeal);
+//                try {
+//                    return ApiUtils.getMealsByArea(a);
+//                } catch (IOException e) {
+//                    return Set.of();
+//                }
+            });
         }
     }
 
