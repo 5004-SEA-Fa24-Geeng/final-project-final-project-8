@@ -1,95 +1,157 @@
 ```mermaid
 classDiagram
 
+%% Dependencies
+JsonParser --> ApiUtils : uses
+JsonParser --> Recipe : creates
+JsonParser --> Ingredient : creates
 
-    JsonParser --> ApiUtils : uses
-    JsonParser --> Recipe : creates
-    JsonParser --> Ingredient : creates
-    
-    RecipeModel --> JsonParser: uses
-    RecipeModel --> Recipe: creates
-    RecipeModel --> Meal: creates
-    RecipeModel --> Ingredient: creates
-    searchRecipeApp --> Controller: uses
-    Controller --> RecipeModel
+IRecipeModel <-- RecipeModel  : implements
+RecipeModel --> JsonParser : uses
+RecipeModel --> Recipe : creates
+RecipeModel --> Meal : creates
+RecipeModel --> Ingredient : creates
+RecipeModel --> CachedMealFetcher : uses
 
-    
-    class ApiUtils {
-        + castIngredientName(String ingredientName) : String
-        + getAllIngredients() : InputStream
-        + getAllCategories() : InputStream
-        + getAllAreas() : InputStream
-        + getIdMealByIngredient(String ingredientName) : Set~Integer~
-        + getRecipeByIdMeal(int idMeal) : InputStream
-        + getUrlContents(String urlStr) : InputStream
-    }
-    
-    class JsonParser {
-        + extractIdMeal(InputStream inputStream) : Set~Integer~
-        + extractRecipeData(InputStream input) : Map~String, Object~
-        + mapToRecipe(Map~String, Object~ recipeData) : Recipe
-        + allIngredientsList(InputStream input) : Set~Ingredient~
-        + allAreasList(InputStream input) : Set~String~
-        + allCategoriesList(InputStream input) : Set~String~
-    }
-    
-    class Ingredient {
-        <<record>>
-        + idIngredient : String
-        + strIngredient : String
-        + strImage : String
-    }
+RecipeModel --> Observer : defines
+CachedMealFetcher --> ApiUtils : uses
+RecipeModel --> GetMealByIngredient : uses
+RecipeModel --> GetMealByCategory : uses
+RecipeModel --> GetMealByArea : uses
 
-    class Meal {
-        <<record>>
-        + mealName: String
-        + mealImg: String
-        + idMeal: String
-    }
+GetMealStrategy --> IGetMealStrategy : implements
+GetMealByIngredient --> CachedMealFetcher : uses
+GetMealByIngredient --> GetMealStrategy : extends
+GetMealByCategory --> CachedMealFetcher : uses
+GetMealByCategory --> GetMealStrategy : extends
+GetMealByArea --> CachedMealFetcher : uses
+GetMealByArea --> GetMealStrategy : extends
 
-    class Recipe {
-        <<record>>
-        + recipeId : int
-        + recipeName : String
-        + category : String
-        + area : String
-        + instructions : String
-        + youtube : String
-        + image : String
-        + ingredients : List~String~
-        + measures : List~String~
-    }
-    
-    class RecipeModel {
-        - allIngredients: Set<Ingredient>
-        - allCategories: Set<String>
-        - allAreas: Set<String>
-        - userIngredients: Set<Ingredient>
-        - userCategory: String
-        - userArea: String
-        - mealOptions: Set<Meal>
-        
-        + processRecipes() : void
-        + setNewIngredients(Set~Ingredient~ userIngredients) : void
-        
-        + getMealsByIngredients(Ingredient ingredient): Set<Meal>
-        + getMealsByCategory(String category): Set<Meal>
-        + getMealsByArea(String area): Set<Meal>
-        
-        + getMutualMeals(Set<Meal> mealSet1, Set<Meal> mealSet2): Set<Meal>
-        + getRecipeByIdMeal(int idMeal) : Recipe
-        
-    }
-    
-    class Controller {
-        + processUserIngredients(): void
-        + processUserCategory(): void
-        + processUserArea(): void
-        + processUserMeal(): void
-    }
-    
-    
-    class searchRecipeApp {
-        + main(String[] args): void
-    }
+searchRecipeApp --> Controller : uses
+Controller --> RecipeModel : uses
+
+%% Interfaces
+class IRecipeModel {
+    <<interface>>
+}
+
+class IGetMealStrategy {
+    <<interface>>
+    + getMeals() Set~Meal~
+}
+
+class Observer {
+    <<interface>>
+    + update() : void
+}
+
+%% Abstract class
+class GetMealStrategy {
+    <<Abstract>>
+    * getMeals() Set~Meal~
+}
+
+%% Core classes
+class ApiUtils {
+    + castIngredientName(String) : String
+    + getAllIngredients() : InputStream
+    + getAllCategories() : InputStream
+    + getAllAreas() : InputStream
+    + getIdMealByIngredient(String) : Set~Integer~
+    + getRecipeByIdMeal(int) : InputStream
+    + getUrlContents(String) : InputStream
+}
+
+class JsonParser {
+    + extractIdMeal(InputStream) : Set~Integer~
+    + extractRecipeData(InputStream) : Map~String, Object~
+    + mapToRecipe(Map~String, Object~) : Recipe
+    + allIngredientsList(InputStream) : Set~Ingredient~
+    + allAreasList(InputStream) : Set~String~
+    + allCategoriesList(InputStream) : Set~String~
+}
+
+class Ingredient {
+    <<record>>
+    + idIngredient : String
+    + strIngredient : String
+    + strImage : String
+}
+
+class Meal {
+    <<record>>
+    + mealName : String
+    + mealImg : String
+    + idMeal : String
+}
+
+class Recipe {
+    <<record>>
+    + recipeId : int
+    + recipeName : String
+    + category : String
+    + area : String
+    + instructions : String
+    + youtube : String
+    + image : String
+    + ingredients : List~String~
+    + measures : List~String~
+}
+
+class RecipeModel {
+    - allIngredients : Set~Ingredient~
+    - allCategories : Set~String~
+    - allAreas : Set~String~
+    - userIngredients : Set~Ingredient~
+    - userCategory : String
+    - userArea : String
+    - cachedMealFetcher : CachedMealFetcher
+
+    + getInstance() : RecipeModel
+    + addObserver(Observer) : void
+    + notifyObservers() : void
+    + processMeals(Set~Ingredient~, String, String) : Set~Meal~
+    + setUserIngredients(Set~Ingredient~) : void
+    + setUserCategory(String) : void
+    + setUserArea(String) : void
+    + getMealsByIngredient(Set~Ingredient~) : Set~Meal~
+    + getMealsByCategory(String) : Set~Meal~
+    + getMealsByArea(String) : Set~Meal~
+    + findIntersection(List~Set~<Meal~>) : Set~Meal~
+    + getRecipeByIdMeal(int) : Recipe
+}
+
+class CachedMealFetcher {
+    - ingredientCache : Map~String, Set~Meal~~
+    - categoryCache : Map~String, Set~Meal~~
+    - areaCache : Map~String, Set~Meal~~
+
+    + getMealsByIngredient(Set~Ingredient~) : Set~Meal~
+    + getMealsByCategory(String) : Set~Meal~
+    + getMealsByArea(String) : Set~Meal~
+}
+
+class Controller {
+    + processUserIngredients() : void
+    + processUserCategory() : void
+    + processUserArea() : void
+    + processUserMeal() : void
+}
+
+class searchRecipeApp {
+    + main(String[] args) : void
+}
+
+class GetMealByIngredient {
+    + getMeals() : Set~Meal~
+}
+
+class GetMealByCategory {
+    + getMeals() : Set~Meal~
+}
+
+class GetMealByArea {
+    + getMeals() : Set~Meal~
+}
+
 ```
