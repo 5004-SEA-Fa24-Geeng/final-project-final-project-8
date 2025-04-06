@@ -27,14 +27,39 @@ public class RecipeModel implements IRecipeModel {
     /** The area that the user selected. */
     String userArea;
 
+    /** The only instance of RecipeModel. */
+    private static RecipeModel instance;
 
-    public RecipeModel() throws IOException {
+    /** List of Observers detects new user submissions. */
+    private final List<Observer> observers = new ArrayList<>();
+
+    private RecipeModel() throws IOException {
         // Before entering the page, the model has been initialized (with a null userIngredients)
         // Convert InputStream to Set
         this.allIngredients = JsonParser.allIngredientsList(ApiUtils.getAllIngredients());
         this.allAreas = JsonParser.allAreasList(ApiUtils.getAllAreas());
         this.allCategories = JsonParser.allCategoriesList(ApiUtils.getAllCategories());
+    }
 
+    // Singleton Pattern: avoid reloading static data like ingredients, areas or categories multiple times
+    public static synchronized RecipeModel getInstance() throws IOException {
+        // Only one instance of RecipeModel can exist throughout the app
+        if (instance == null) {
+            instance = new RecipeModel();
+        }
+        return instance;
+    }
+
+    // call this method in Controller
+    // e.g. RecipeModel.getInstance().addObserver(this);
+    public void addObserver(Observer observer) {
+        this.observers.add(observer);
+    }
+
+    public void notifyObservers() {
+        for (Observer observer : this.observers) {
+            observer.update();
+        }
     }
 
     /**
@@ -75,15 +100,19 @@ public class RecipeModel implements IRecipeModel {
         // collect all non-empty meal sets
         List<Set<Meal>> mealSets = new ArrayList<>();
 
-        // get meals only if user inputs that field
+        // if the user selected ingredients, apply IngredientFilterStrategy
         if (this.userIngredients != null) {
-            mealSets.add(getMealsByIngredient(userIngredients));
+            mealSets.add(new IngredientFilterStrategy(this.userIngredients).filter());
         }
+
+        // if the user selected a category, apply CategoryFilterStrategy
         if (this.userCategory != null) {
-            mealSets.add(getMealsByCategory(userCategory));
+            mealSets.add(new CategoryFilterStrategy(this.userCategory).filter());
         }
+
+        // if the user selected an area, apply AreaFilterStrategy
         if (this.userArea != null) {
-            mealSets.add(getMealsByCategory(userArea));
+            mealSets.add(new AreaFilterStrategy(this.userArea).filter());
         }
 
         // handle different cases of user inputs
@@ -116,6 +145,7 @@ public class RecipeModel implements IRecipeModel {
     @Override
     public void setUserIngredients(Set<Ingredient> userIngredients) {
         this.userIngredients = userIngredients;
+        notifyObservers();
     }
 
 
@@ -127,6 +157,7 @@ public class RecipeModel implements IRecipeModel {
     @Override
     public void setUserCategory(String category) {
         this.userCategory = category;
+        notifyObservers();
     }
 
     /**
@@ -137,6 +168,7 @@ public class RecipeModel implements IRecipeModel {
     @Override
     public void setUserArea(String area) {
         this.userArea = area;
+        notifyObservers();
     }
 
     /**
@@ -207,5 +239,40 @@ public class RecipeModel implements IRecipeModel {
         // get recipe object: Recipe mapToRecipe(Map<String, Object> recipeData)
         return JsonParser.mapToRecipe(recipeData);
     }
+
+    public class IngredientFilterStrategy implements MealFilterStrategy {
+        private final Set<Ingredient> ingredients;
+        public IngredientFilterStrategy(Set<Ingredient> ingredients) {
+            this.ingredients = ingredients;
+        }
+        @Override
+        public Set<Meal> filter() throws IOException {
+            return getMealsByIngredient(ingredients);
+        }
+    }
+
+    public class CategoryFilterStrategy implements MealFilterStrategy {
+        private final String category;
+        public CategoryFilterStrategy(String category) {
+            this.category = category;
+        }
+        @Override
+        public Set<Meal> filter() throws IOException {
+            return getMealsByCategory(category);
+        }
+    }
+
+    public class AreaFilterStrategy implements MealFilterStrategy {
+        private final String area;
+        public AreaFilterStrategy(String area) {
+            this.area = area;
+        }
+        @Override
+        public Set<Meal> filter() throws IOException {
+            return getMealsByArea(area);
+        }
+    }
+
+
 
 }
