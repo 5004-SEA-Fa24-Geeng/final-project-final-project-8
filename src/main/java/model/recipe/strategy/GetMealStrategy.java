@@ -3,7 +3,6 @@ package model.recipe.strategy;
 import model.recipe.Meal;
 import model.recipe.RecipeModel;
 
-import java.io.IOException;
 import java.util.Set;
 
 public abstract class GetMealStrategy implements IGetMealStrategy {
@@ -15,5 +14,5 @@ public abstract class GetMealStrategy implements IGetMealStrategy {
     }
 
     @Override
-    public abstract Set<Meal> getMeals() throws IOException;
+    public abstract Set<Meal> getMeals();
 }

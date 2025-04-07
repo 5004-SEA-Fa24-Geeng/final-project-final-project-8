@@ -16,7 +16,7 @@ public class GetMealByCategory extends GetMealStrategy {
     }
 
     @Override
-    public Set<Meal> getMeals() throws IOException {
+    public Set<Meal> getMeals() {
         return fetcher.getMealsByCategory(category);
     }
 }
