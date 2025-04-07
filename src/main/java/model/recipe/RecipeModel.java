@@ -181,10 +181,10 @@ public class RecipeModel implements IRecipeModel {
      * Get meals that contain specific ingredients.
      * @param userIngredients The ingredients selected by the user.
      * @return A set of meals matching those ingredients.
-     * @throws IOException If API call fails.
+     *
      */
     @Override
-    public Set<Meal> getMealsByIngredient(Set<Ingredient> userIngredients) throws IOException {
+    public Set<Meal> getMealsByIngredient(Set<Ingredient> userIngredients) {
         return cachedMealFetcher.getMealsByIngredient(userIngredients);
     }
 
@@ -192,10 +192,10 @@ public class RecipeModel implements IRecipeModel {
      * Get meals that belong to a specific category.
      * @param category The selected category.
      * @return A set of meals in that category.
-     * @throws IOException If API call fails.
+     *
      */
     @Override
-    public Set<Meal> getMealsByCategory(String category) throws IOException {
+    public Set<Meal> getMealsByCategory(String category) {
         return cachedMealFetcher.getMealsByCategory(category);
     }
 
@@ -203,10 +203,10 @@ public class RecipeModel implements IRecipeModel {
      * Get meals that belong to a specific area.
      * @param area The selected area.
      * @return A set of meals in that area.
-     * @throws IOException If API call fails.
+     *
      */
     @Override
-    public Set<Meal> getMealsByArea(String area) throws IOException {
+    public Set<Meal> getMealsByArea(String area) {
         return cachedMealFetcher.getMealsByArea(area);
     }
 
@@ -246,7 +246,7 @@ public class RecipeModel implements IRecipeModel {
         private final Map<String, Set<Meal>> categoryCache = new HashMap<>();
         private final Map<String, Set<Meal>> areaCache = new HashMap<>();
 
-        public Set<Meal> getMealsByIngredient(Set<Ingredient> userIngredients) throws IOException {
+        public Set<Meal> getMealsByIngredient(Set<Ingredient> userIngredients) {
             Set<Meal> mealSetOfUserIngredients = new HashSet<>();
 
             for (Ingredient ingredient : userIngredients) {
@@ -263,7 +263,7 @@ public class RecipeModel implements IRecipeModel {
             return mealSetOfUserIngredients;
         }
 
-        public Set<Meal> getMealsByCategory(String category) throws IOException {
+        public Set<Meal> getMealsByCategory(String category) {
             return categoryCache.computeIfAbsent(category, c -> {
                 // Using mock data before ApiUtils.getMealsByCategory is implemented.
                 Meal mockMeal = new Meal("MockCategoryMeal", "https://example.com/image.jpg", "12345");
@@ -276,7 +276,7 @@ public class RecipeModel implements IRecipeModel {
             });
         }
 
-        public Set<Meal> getMealsByArea(String area) throws IOException {
+        public Set<Meal> getMealsByArea(String area) {
             return areaCache.computeIfAbsent(area, a -> {
                 // Using mock data before ApiUtils.getMealsByArea is implemented.
                 Meal mockMeal = new Meal("MockAreaMeal", "https://example.com/image2.jpg", "67890");
