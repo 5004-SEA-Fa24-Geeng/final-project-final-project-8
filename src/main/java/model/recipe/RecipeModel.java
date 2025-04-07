@@ -7,6 +7,7 @@ import model.recipe.strategy.GetMealByCategory;
 import model.recipe.strategy.GetMealByIngredient;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -265,27 +266,21 @@ public class RecipeModel implements IRecipeModel {
 
         public Set<Meal> getMealsByCategory(String category) {
             return categoryCache.computeIfAbsent(category, c -> {
-                // Using mock data before ApiUtils.getMealsByCategory is implemented.
-                Meal mockMeal = new Meal("MockCategoryMeal", "https://example.com/image.jpg", "12345");
-                return Set.of(mockMeal);
-//                try {
-//                    return ApiUtils.getMealsByCategory(c);
-//                } catch (IOException e) {
-//                    return Set.of();
-//                }
+                try {
+                    return JsonParser.extractMeals(ApiUtils.mealsByCategory(c));
+                } catch (IOException e) {
+                    return Set.of();
+                }
             });
         }
 
         public Set<Meal> getMealsByArea(String area) {
             return areaCache.computeIfAbsent(area, a -> {
-                // Using mock data before ApiUtils.getMealsByArea is implemented.
-                Meal mockMeal = new Meal("MockAreaMeal", "https://example.com/image2.jpg", "67890");
-                return Set.of(mockMeal);
-//                try {
-//                    return ApiUtils.getMealsByArea(a);
-//                } catch (IOException e) {
-//                    return Set.of();
-//                }
+                try {
+                    return JsonParser.extractMeals(ApiUtils.mealsByArea(a));
+                } catch (IOException e) {
+                    return Set.of();
+                }
             });
         }
     }
