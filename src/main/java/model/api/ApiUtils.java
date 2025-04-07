@@ -23,6 +23,10 @@ public final class ApiUtils {
     private static final String GET_IDMEAL = "https://www.themealdb.com/api/json/v1/1/filter.php?i=%s";
     // URL to search recipe by idMeal.
     private static final String GET_RECIPE = "https://www.themealdb.com/api/json/v1/1/lookup.php?i=%d";
+    // URL to search meals by category
+    private static final String CATEGORY = "https://www.themealdb.com/api/json/v1/1/filter.php?c=%s";
+    // URL to search meals by area
+    private static final String AREA = "https://www.themealdb.com/api/json/v1/1/filter.php?a=%s";
 
     // Private constructor to prevent instantiation
     private ApiUtils() {
@@ -76,10 +80,39 @@ public final class ApiUtils {
         return JsonParser.extractIdMeal(data);
     }
 
+    /**
+     * Retrieves the meals from the specified ingredient.
+     *
+     * @param ingredientName the name of the ingredient to search for (e.g., "chicken", "garlic")
+     * @return a Set of {@link Meal} objects that include the specified ingredient
+     * @throws IOException if an I/O error occurs while retrieving or parsing the data
+     */
     public static Set<Meal> getMealsByIngredient(String ingredientName) throws IOException {
         String ingredientUrl = String.format(GET_IDMEAL, castIngredientName(ingredientName));
         InputStream data = getUrlContents(ingredientUrl);
         return JsonParser.extractMeals(data);
+    }
+
+    /**
+     * Retrieves the meals from a given category.
+     *
+     * @param category the name of the meal category (e.g., "Seafood", "Dessert")
+     * @return an InputStream containing the response from the API for the given category
+     */
+    public static InputStream mealsByCategory(String category) {
+        String url = String.format(CATEGORY, category);
+        return getUrlContents(url);
+    }
+
+    /**
+     * Retrieves the meals from a given area.
+     *
+     * @param area the name of the area or region (e.g., "Canadian", "Italian")
+     * @return an InputStream containing the response from the API for the given area
+     */
+    public static InputStream mealsByArea(String area) {
+        String url = String.format(AREA, area);
+        return getUrlContents(url);
     }
 
     /**
