@@ -119,7 +119,7 @@ public final class JsonParser {
      */
     public static Recipe mapToRecipe(Map<String, Object> recipeData) {
         int recipeId = (int) recipeData.get("recipeId");
-        String recipeName = (String) recipeData.get("recipeName");
+        String recipeName = (String) recipeData.get("mealName");
         String category = (String) recipeData.get("category");
         String area = (String) recipeData.get("area");
         String instructions = (String) recipeData.get("instructions");
