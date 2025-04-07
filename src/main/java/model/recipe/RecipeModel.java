@@ -192,7 +192,6 @@ public class RecipeModel implements IRecipeModel {
      * Get meals that belong to a specific category.
      * @param category The selected category.
      * @return A set of meals in that category.
-     *
      */
     @Override
     public Set<Meal> getMealsByCategory(String category) {
@@ -203,7 +202,6 @@ public class RecipeModel implements IRecipeModel {
      * Get meals that belong to a specific area.
      * @param area The selected area.
      * @return A set of meals in that area.
-     *
      */
     @Override
     public Set<Meal> getMealsByArea(String area) {
