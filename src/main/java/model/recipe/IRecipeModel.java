@@ -105,4 +105,6 @@ public interface IRecipeModel {
      * @param o The observer to register.
      */
     void addObserver(Observer o);
+
+    void notifyObservers();
 }
