@@ -7,7 +7,6 @@ import model.recipe.strategy.GetMealByCategory;
 import model.recipe.strategy.GetMealByIngredient;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -59,10 +58,12 @@ public class RecipeModel implements IRecipeModel {
 
     // call this method in Controller
     // e.g. RecipeModel.getInstance().addObserver(this);
+    @Override
     public void addObserver(Observer observer) {
         this.observers.add(observer);
     }
 
+    @Override
     public void notifyObservers() {
         for (Observer observer : this.observers) {
             observer.update();

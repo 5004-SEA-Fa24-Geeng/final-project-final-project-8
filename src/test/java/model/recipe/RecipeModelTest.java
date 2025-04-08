@@ -4,123 +4,162 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class RecipeModelTest {
 
-    private IRecipeModel model;
-
-    private final Ingredient lime = new Ingredient("202", "Lime", "www.themealdb.com/images/ingredients/lime-medium.png");
-    private final Meal mockMeal = new Meal(
-            "Chick-Fil-A Sandwich",
-            "https://www.themealdb.com/images/media/meals/sbx7n71587673021.jpg",
-            "53016"
-    );
+    private MockRecipeModel mockModel;
+    private Ingredient ingredient1;
+    private Ingredient ingredient2;
+    private Meal meal1;
+    private Meal meal2;
+    private Meal meal3;
 
     @BeforeEach
     void setUp() {
-        model = new MockRecipeModel();
+        mockModel = new MockRecipeModel();
+
+        ingredient1 = new Ingredient("1", "Chicken", "");
+        ingredient2 = new Ingredient("2", "Rice", "");
+
+        meal1 = new Meal("Chicken Stew", "thumb1", "101");
+        meal2 = new Meal("Chicken Rice", "thumb2", "102");
+        meal3 = new Meal("Pasta", "thumb3", "103");
     }
 
     @Test
-    void getAllIngredients() {
-        Set<Ingredient> ingredients = model.getAllIngredients();
-        assertEquals(1, ingredients.size());
-        assertTrue(ingredients.contains(lime));
+    void testGetAllIngredients() {
+        assertEquals(2, mockModel.getAllIngredients().size());
     }
 
     @Test
-    void getAllCategories() {
-        Set<String> categories = model.getAllCategories();
-        assertTrue(categories.contains("Chicken"));
-        assertTrue(categories.contains("Beef"));
+    void testGetAllCategories() {
+        assertTrue(mockModel.getAllCategories().contains("Main"));
     }
 
     @Test
-    void getAllAreas() {
-        Set<String> areas = model.getAllAreas();
-        assertTrue(areas.contains("American"));
-        assertTrue(areas.contains("British"));
+    void testGetAllAreas() {
+        assertTrue(mockModel.getAllAreas().contains("Italian"));
     }
 
     @Test
-    void findIntersection() {
-        Set<Meal> set1 = Set.of(mockMeal);
-        Set<Meal> set2 = Set.of(mockMeal);
-        Set<Meal> set3 = Set.of(mockMeal);
-        Set<Meal> intersection = model.findIntersection(List.of(set1, set2, set3));
-        assertEquals(1, intersection.size());
-        assertTrue(intersection.contains(mockMeal));
-    }
+    void testProcessMealsWithAllInputs() {
+        Set<Ingredient> userIngredients = Set.of(ingredient1);
+        Set<Meal> result = mockModel.processMeals(userIngredients, "Main", "Italian");
 
-    @Test
-    void setUserIngredients() throws IOException {
-        model.setUserIngredients(Set.of(lime));
-        Set<Meal> result = model.getMealsByIngredient(Set.of(lime));
-        assertTrue(result.contains(mockMeal));
-    }
-
-    @Test
-    void setUserCategory() throws IOException {
-        model.setUserCategory("Chicken");
-        Set<Meal> result = model.getMealsByCategory("Chicken");
-        assertTrue(result.contains(mockMeal));
-    }
-
-    @Test
-    void setUserArea() throws IOException {
-        model.setUserArea("American");
-        Set<Meal> result = model.getMealsByArea("American");
-        assertTrue(result.contains(mockMeal));
-    }
-
-    @Test
-    void getMealsByIngredient() throws IOException {
-        Set<Meal> result = model.getMealsByIngredient(Set.of(lime));
         assertEquals(1, result.size());
-        assertTrue(result.contains(mockMeal));
+        assertTrue(result.contains(meal1));
     }
 
     @Test
-    void getMealsByCategory() throws IOException {
-        Set<Meal> result = model.getMealsByCategory("Chicken");
+    void testProcessMealsWithOnlyIngredient() {
+        Set<Ingredient> userIngredients = Set.of(ingredient2);
+        Set<Meal> result = mockModel.processMeals(userIngredients, null, null);
+
         assertEquals(1, result.size());
-        assertTrue(result.contains(mockMeal));
+        assertTrue(result.contains(meal2));
     }
 
     @Test
-    void getMealsByArea() throws IOException {
-        Set<Meal> result = model.getMealsByArea("American");
+    void testFindIntersection() {
+        List<Set<Meal>> sets = List.of(
+                Set.of(meal1, meal2),
+                Set.of(meal1),
+                Set.of(meal1, meal3)
+        );
+
+        Set<Meal> result = mockModel.findIntersection(sets);
         assertEquals(1, result.size());
-        assertTrue(result.contains(mockMeal));
+        assertTrue(result.contains(meal1));
     }
 
     @Test
-    void getMutualMeals() {
-        Set<Meal> meals1 = Set.of(mockMeal);
-        Set<Meal> meals2 = Set.of(mockMeal);
-        Set<Meal> meals3 = Set.of(mockMeal);
-        Set<Meal> result = model.getMutualMeals(meals1, meals2, meals3);
-        assertEquals(1, result.size());
-        assertTrue(result.contains(mockMeal));
+    void testGetMutualMeals() {
+        Set<Meal> mutual = mockModel.getMutualMeals(
+                Set.of(meal1, meal2),
+                Set.of(meal1, meal3),
+                Set.of(meal1)
+        );
+
+        assertEquals(1, mutual.size());
+        assertTrue(mutual.contains(meal1));
     }
 
     @Test
-    void getRecipeByIdMeal() throws IOException {
-        Recipe recipe = model.getRecipeByIdMeal(53016);
+    void testSettersNotifyObservers() {
+        class TestObserver implements Observer {
+            int updates = 0;
+            public void update() { updates++; }
+        }
+
+        TestObserver observer = new TestObserver();
+        mockModel.addObserver(observer);
+
+        mockModel.setUserIngredients(Set.of(ingredient1));
+        mockModel.setUserCategory("Main");
+        mockModel.setUserArea("Italian");
+
+        assertEquals(3, observer.updates); // Each setter triggers one update
+    }
+
+    @Test
+    void testGetRecipeByIdMeal() throws IOException {
+        Recipe recipe = mockModel.getRecipeByIdMeal(999);
         assertNotNull(recipe);
-        assertEquals("Chick-Fil-A Sandwich", recipe.recipeName());
-        assertEquals("Chicken", recipe.category());
-        assertTrue(recipe.ingredients().contains("Lime"));
+        assertEquals("Mock Recipe", recipe.recipeName());
     }
 
+
+    // 1. Single ingredient, no category, no area
     @Test
-    void processMeals_withLimeChickenAmerican() throws IOException {
-        Set<Meal> result = model.processMeals(Set.of(lime), "Chicken", "American");
-        assertEquals(1, result.size());
-        assertTrue(result.contains(mockMeal));
+    void testSingleIngredientOnly() {
+        Set<Meal> result = mockModel.processMeals(Set.of(ingredient1), null, null);
+        assertEquals(Set.of(meal1), result);
+    }
+
+    // 2. Two ingredients, no category, no area
+    @Test
+    void testTwoIngredientsOnly() {
+        Set<Meal> result = mockModel.processMeals(Set.of(ingredient1, ingredient2), null, null);
+        assertEquals(Set.of(meal1, meal2), result);
+    }
+
+    // 3. Single ingredient + one category, no area
+    @Test
+    void testSingleIngredientAndCategory() {
+        Set<Meal> result = mockModel.processMeals(Set.of(ingredient1), "Main", null);
+        Set<Meal> expected = mockModel.findIntersection(
+                List.of(Set.of(meal1), Set.of(meal1, meal3))
+        );
+        assertEquals(expected, result);
+    }
+
+    // 4. Two ingredients + one area, no category
+    @Test
+    void testTwoIngredientsAndArea() {
+        Set<Meal> result = mockModel.processMeals(Set.of(ingredient1, ingredient2), null, "Italian");
+        Set<Meal> expected = mockModel.findIntersection(
+                List.of(Set.of(meal1, meal2), Set.of(meal1, meal3))
+        );
+        assertEquals(expected, result);
+    }
+
+    // 5. Single ingredient + one category + one area
+    @Test
+    void testSingleIngredientCategoryArea() {
+        Set<Meal> result = mockModel.processMeals(Set.of(ingredient1), "Main", "Italian");
+        Set<Meal> expected = mockModel.findIntersection(
+                List.of(Set.of(meal1), Set.of(meal1, meal3), Set.of(meal1, meal3))
+        );
+        assertEquals(expected, result);
+    }
+
+    // 6. Two ingredients, no category, no area (same as test 2, included for clarity)
+    @Test
+    void testTwoIngredientsNoCategoryNoAreaRepeated() {
+        Set<Meal> result = mockModel.processMeals(Set.of(ingredient1, ingredient2), null, null);
+        assertEquals(Set.of(meal1, meal2), result);
     }
 }

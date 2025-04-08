@@ -4,7 +4,6 @@ import model.recipe.Ingredient;
 import model.recipe.Meal;
 import model.recipe.RecipeModel.CachedMealFetcher;
 
-import java.io.IOException;
 import java.util.Set;
 
 public class GetMealByIngredient extends GetMealStrategy {
