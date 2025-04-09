@@ -1,15 +1,9 @@
-package model.recipe.strategy;
+package com.group8.foodwizard.model.recipe.strategy;
 
-import model.recipe.Meal;
+import com.group8.foodwizard.model.recipe.Meal;
 
 import java.util.Set;
 
 public interface IGetMealStrategy {
     Set<Meal> getMeals();
 }
-
-
-
-
-
-
