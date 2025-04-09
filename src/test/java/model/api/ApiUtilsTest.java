@@ -1,6 +1,6 @@
 package model.api;
 
-import model.api.ApiUtils;
+import com.group8.foodwizard.model.api.ApiUtils;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;

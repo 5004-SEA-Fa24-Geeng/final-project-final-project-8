@@ -1,10 +1,10 @@
-package model.recipe;
+package com.group8.foodwizard.model.recipe;
 
-import model.api.ApiUtils;
-import model.formatter.JsonParser;
-import model.recipe.strategy.GetMealByArea;
-import model.recipe.strategy.GetMealByCategory;
-import model.recipe.strategy.GetMealByIngredient;
+import com.group8.foodwizard.model.api.ApiUtils;
+import com.group8.foodwizard.model.formatter.JsonParser;
+import com.group8.foodwizard.model.recipe.strategy.GetMealByArea;
+import com.group8.foodwizard.model.recipe.strategy.GetMealByCategory;
+import com.group8.foodwizard.model.recipe.strategy.GetMealByIngredient;
 
 import java.io.IOException;
 import java.util.*;
@@ -72,6 +72,7 @@ public class RecipeModel implements IRecipeModel {
 
     /**
      * Get all ingredients from online API.
+     * 
      * @return All ingredients.
      */
     @Override
@@ -81,6 +82,7 @@ public class RecipeModel implements IRecipeModel {
 
     /**
      * Get all categories from online API.
+     * 
      * @return All categories.
      */
     @Override
@@ -90,6 +92,7 @@ public class RecipeModel implements IRecipeModel {
 
     /**
      * Get all areas from online API.
+     * 
      * @return All areas.
      */
     @Override
@@ -131,7 +134,7 @@ public class RecipeModel implements IRecipeModel {
         };
     }
 
-    /** Find the intersection of multiple meal sets.*/
+    /** Find the intersection of multiple meal sets. */
     @Override
     public Set<Meal> findIntersection(List<Set<Meal>> mealSets) {
         if (mealSets.isEmpty()) {
@@ -155,7 +158,6 @@ public class RecipeModel implements IRecipeModel {
         this.userIngredients = userIngredients;
         notifyObservers();
     }
-
 
     /**
      * Sets the category selected by the user.
@@ -181,6 +183,7 @@ public class RecipeModel implements IRecipeModel {
 
     /**
      * Get meals that contain specific ingredients.
+     * 
      * @param userIngredients The ingredients selected by the user.
      * @return A set of meals matching those ingredients.
      *
@@ -192,6 +195,7 @@ public class RecipeModel implements IRecipeModel {
 
     /**
      * Get meals that belong to a specific category.
+     * 
      * @param category The selected category.
      * @return A set of meals in that category.
      *
@@ -203,6 +207,7 @@ public class RecipeModel implements IRecipeModel {
 
     /**
      * Get meals that belong to a specific area.
+     * 
      * @param area The selected area.
      * @return A set of meals in that area.
      *
@@ -226,7 +231,6 @@ public class RecipeModel implements IRecipeModel {
                 .filter(mealSet3::contains)
                 .collect(Collectors.toSet());
     }
-
 
     /**
      * Retrieves a recipe based on a given meal ID.
@@ -285,7 +289,5 @@ public class RecipeModel implements IRecipeModel {
             });
         }
     }
-
-
 
 }

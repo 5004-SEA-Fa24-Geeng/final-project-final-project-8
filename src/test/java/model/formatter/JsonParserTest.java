@@ -1,7 +1,8 @@
 package model.formatter;
 
-import model.recipe.Meal;
-import model.recipe.Recipe;
+import com.group8.foodwizard.model.recipe.Meal;
+import com.group8.foodwizard.model.recipe.Recipe;
+import com.group8.foodwizard.model.formatter.JsonParser;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
@@ -17,24 +18,24 @@ import static org.junit.jupiter.api.Assertions.*;
 class JsonParserTest {
 
     private static final String AREAS_JSON = """
-        {
-            "meals": [
-                {"strArea": "American"},
-                {"strArea": "Italian"},
-                {"strArea": "Mexican"}
-            ]
-        }
-    """;
+                {
+                    "meals": [
+                        {"strArea": "American"},
+                        {"strArea": "Italian"},
+                        {"strArea": "Mexican"}
+                    ]
+                }
+            """;
 
     private static final String CATEGORIES_JSON = """
-        {
-            "meals": [
-                {"strCategory": "Dessert"},
-                {"strCategory": "Seafood"},
-                {"strCategory": "Vegetarian"}
-            ]
-        }
-    """;
+                {
+                    "meals": [
+                        {"strCategory": "Dessert"},
+                        {"strCategory": "Seafood"},
+                        {"strCategory": "Vegetarian"}
+                    ]
+                }
+            """;
 
     @Test
     void extractIdMeal() throws IOException {
@@ -72,7 +73,6 @@ class JsonParserTest {
         assertNotNull(result);
         assertEquals(Set.of("Dessert", "Seafood", "Vegetarian"), result);
     }
-
 
     @Test
     void testExtractMeals_validJson() throws Exception {
@@ -144,7 +144,7 @@ class JsonParserTest {
     void testMapToRecipe() {
         Map<String, Object> recipeData = new HashMap<>();
         recipeData.put("recipeId", 52940);
-        recipeData.put("recipeName", "Pasta Carbonara");
+        recipeData.put("mealName", "Pasta Carbonara");
         recipeData.put("category", "Pork");
         recipeData.put("area", "Italy");
         recipeData.put("instructions", "Boil pasta and mix with sauce");
