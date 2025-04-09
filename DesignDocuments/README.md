@@ -165,7 +165,9 @@ class GetMealByArea {
 
 ## Final UML
 
+
 ## Program Flow
+![Food Wizard App Flow Chart](Food%20Wizard%20App%20Flow%20Chart_.png)
 
 ### User Interaction:
 - Display a comprehensive dropdown list of ingredients in alphabetical order.
