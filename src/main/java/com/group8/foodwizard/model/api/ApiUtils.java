@@ -1,8 +1,8 @@
-package model.api;
+package com.group8.foodwizard.model.api;
 
-import model.formatter.JsonParser;
-import model.recipe.IRecipeModel;
-import model.recipe.Meal;
+import com.group8.foodwizard.model.formatter.JsonParser;
+import com.group8.foodwizard.model.recipe.IRecipeModel;
+import com.group8.foodwizard.model.recipe.Meal;
 
 import java.io.IOException;
 import java.io.InputStream;

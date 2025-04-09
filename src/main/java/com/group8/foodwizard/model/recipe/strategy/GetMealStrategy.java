@@ -1,7 +1,7 @@
-package model.recipe.strategy;
+package com.group8.foodwizard.model.recipe.strategy;
 
-import model.recipe.Meal;
-import model.recipe.RecipeModel;
+import com.group8.foodwizard.model.recipe.Meal;
+import com.group8.foodwizard.model.recipe.RecipeModel;
 
 import java.util.Set;
 

@@ -1,8 +1,8 @@
-package model.recipe.strategy;
+package com.group8.foodwizard.model.recipe.strategy;
 
-import model.recipe.Ingredient;
-import model.recipe.Meal;
-import model.recipe.RecipeModel.CachedMealFetcher;
+import com.group8.foodwizard.model.recipe.Ingredient;
+import com.group8.foodwizard.model.recipe.Meal;
+import com.group8.foodwizard.model.recipe.RecipeModel.CachedMealFetcher;
 
 import java.util.Set;
 

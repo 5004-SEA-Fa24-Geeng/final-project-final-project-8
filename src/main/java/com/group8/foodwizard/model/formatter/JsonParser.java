@@ -1,19 +1,16 @@
-package model.formatter;
-
+package com.group8.foodwizard.model.formatter;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import model.api.ApiUtils;
+import com.group8.foodwizard.model.api.ApiUtils;
 
-import model.recipe.Ingredient;
-import model.recipe.Meal;
-import model.recipe.Recipe;
-
+import com.group8.foodwizard.model.recipe.Ingredient;
+import com.group8.foodwizard.model.recipe.Meal;
+import com.group8.foodwizard.model.recipe.Recipe;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
-
 
 /**
  * Utility class for parsing JSON data related to meals, ingredients, areas, and categories.
@@ -197,6 +194,6 @@ public final class JsonParser {
                 allCategories.add(category.path("strCategory").asText());
             }
         }
-       return allCategories;
+        return allCategories;
     }
 }
