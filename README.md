@@ -12,7 +12,7 @@ Many individuals often find themselves with leftover ingredients and lack ideas 
 
 ## 👱🏼 Group Members:
 - Lu-Yin Wang (Rebecca): [Personal GitHub](https://github.com/rebwang)
-- Pei-Yu Chen (Lucy): [Personal GitHub](https://github.com/lucyyyychen)
+- Pei-Yu Chen (Lucy): [Personal GitHub](https://github.com/lucyyyychen) [(Also using "lucy-at-may4s" to contribute)](https://github.com/lucy-at-may4s)
 - Chun-Wen Hsueh (Vince): [Personal GitHub](https://github.com/ChunWenHsueh)
 
 ## 📃 Project Doc:
