@@ -1,5 +1,7 @@
 package com.group8.foodwizard.model.formatter;
 
+import com.group8.foodwizard.model.api.ApiUtils;
+import com.group8.foodwizard.model.recipe.Ingredient;
 import com.group8.foodwizard.model.recipe.Meal;
 import com.group8.foodwizard.model.recipe.Recipe;
 import com.group8.foodwizard.model.formatter.JsonParser;
@@ -36,6 +38,8 @@ class JsonParserTest {
                     ]
                 }
             """;
+
+    private static final String INGREDIENT_IMAGE = "www.themealdb.com/images/ingredients/%s-medium.png";
 
     @Test
     void extractIdMeal() throws IOException {
@@ -159,5 +163,38 @@ class JsonParserTest {
         assertEquals("Pork", recipe.category());
         assertEquals("Italy", recipe.area());
         assertEquals("Boil pasta and mix with sauce", recipe.instructions());
+    }
+
+    @Test
+    public void testAllIngredientsList() throws Exception {
+        // Arrange: create mock JSON input
+        String mockJson = """
+            {
+                "meals": [
+                    {
+                        "idIngredient": "1",
+                        "strIngredient": "Chicken"
+                    },
+                    {
+                        "idIngredient": "2",
+                        "strIngredient": "Beef"
+                    }
+                ]
+            }
+        """;
+
+        InputStream input = new ByteArrayInputStream(mockJson.getBytes());
+
+        // Expected image URLs (based on how INGREDIENT_IMAGE and ApiUtils.castIngredientName work)
+        String imageUrl1 = String.format(INGREDIENT_IMAGE, ApiUtils.castIngredientName("Chicken"));
+        String imageUrl2 = String.format(INGREDIENT_IMAGE, ApiUtils.castIngredientName("Beef"));
+
+        // Act
+        Set<Ingredient> result = JsonParser.allIngredientsList(input);
+
+        // Assert
+        assertEquals(2, result.size());
+        assertTrue(result.contains(new Ingredient("1", "Chicken", imageUrl1)));
+        assertTrue(result.contains(new Ingredient("2", "Beef", imageUrl2)));
     }
 }
