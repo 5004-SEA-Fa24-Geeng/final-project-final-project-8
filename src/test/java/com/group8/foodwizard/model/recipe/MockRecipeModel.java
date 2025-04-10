@@ -1,4 +1,4 @@
-package model.recipe;
+package com.group8.foodwizard.model.recipe;
 
 import java.io.IOException;
 import java.util.*;

@@ -1,4 +1,4 @@
-package model.formatter;
+package com.group8.foodwizard.model.formatter;
 
 import com.group8.foodwizard.model.recipe.Meal;
 import com.group8.foodwizard.model.recipe.Recipe;
