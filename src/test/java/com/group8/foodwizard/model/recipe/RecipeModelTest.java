@@ -1,4 +1,4 @@
-package model.recipe;
+package com.group8.foodwizard.model.recipe;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

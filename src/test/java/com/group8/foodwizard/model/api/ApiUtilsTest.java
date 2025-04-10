@@ -1,4 +1,4 @@
-package model.api;
+package com.group8.foodwizard.model.api;
 
 import com.group8.foodwizard.model.api.ApiUtils;
 import org.junit.jupiter.api.Test;
