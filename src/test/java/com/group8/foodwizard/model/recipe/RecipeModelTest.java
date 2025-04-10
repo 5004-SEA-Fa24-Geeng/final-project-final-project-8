@@ -193,5 +193,6 @@ class RecipeModelTest {
                         mockModel.getMealsByCategory("Pasta"),  mockModel.getMealsByArea("Italian"))
         );
         assertEquals(expected, result);
+
     }
 }
