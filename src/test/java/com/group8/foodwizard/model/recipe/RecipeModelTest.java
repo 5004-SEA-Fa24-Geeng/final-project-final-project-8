@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class RecipeModelTest {
 
-    private MockRecipeModel mockModel;
+    private RecipeModel mockModel;
     private Ingredient ingredient1;
     private Ingredient ingredient2;
     private Meal meal1;
@@ -18,8 +18,8 @@ class RecipeModelTest {
     private Meal meal3;
 
     @BeforeEach
-    void setUp() {
-        mockModel = new MockRecipeModel();
+    void setUp() throws IOException {
+        mockModel = new RecipeModel();
 
         ingredient1 = new Ingredient("1", "Chicken", "");
         ingredient2 = new Ingredient("2", "Rice", "");
@@ -31,21 +31,24 @@ class RecipeModelTest {
 
     @Test
     void testGetAllIngredients() {
-        assertEquals(2, mockModel.getAllIngredients().size());
+        int exepctedAllIngredientsNumber = 575;
+        assertEquals(exepctedAllIngredientsNumber, mockModel.getAllIngredients().size());
     }
 
     @Test
     void testGetAllCategories() {
-        assertTrue(mockModel.getAllCategories().contains("Main"));
+        System.out.println(mockModel.getAllCategories());
+        assertTrue(mockModel.getAllCategories().contains("Seafood"));
     }
 
     @Test
     void testGetAllAreas() {
+        System.out.println(mockModel.getAllAreas());
         assertTrue(mockModel.getAllAreas().contains("Italian"));
     }
 
     @Test
-    void testProcessMealsWithAllInputs() {
+    void testProcessMealsWithAllInputs() throws IOException {
         Set<Ingredient> userIngredients = Set.of(ingredient1);
         Set<Meal> result = mockModel.processMeals(userIngredients, "Main", "Italian");
 
@@ -54,7 +57,7 @@ class RecipeModelTest {
     }
 
     @Test
-    void testProcessMealsWithOnlyIngredient() {
+    void testProcessMealsWithOnlyIngredient() throws IOException {
         Set<Ingredient> userIngredients = Set.of(ingredient2);
         Set<Meal> result = mockModel.processMeals(userIngredients, null, null);
 
@@ -114,21 +117,21 @@ class RecipeModelTest {
 
     // 1. Single ingredient, no category, no area
     @Test
-    void testSingleIngredientOnly() {
+    void testSingleIngredientOnly() throws IOException {
         Set<Meal> result = mockModel.processMeals(Set.of(ingredient1), null, null);
         assertEquals(Set.of(meal1), result);
     }
 
     // 2. Two ingredients, no category, no area
     @Test
-    void testTwoIngredientsOnly() {
+    void testTwoIngredientsOnly() throws IOException {
         Set<Meal> result = mockModel.processMeals(Set.of(ingredient1, ingredient2), null, null);
         assertEquals(Set.of(meal1, meal2), result);
     }
 
     // 3. Single ingredient + one category, no area
     @Test
-    void testSingleIngredientAndCategory() {
+    void testSingleIngredientAndCategory() throws IOException {
         Set<Meal> result = mockModel.processMeals(Set.of(ingredient1), "Main", null);
         Set<Meal> expected = mockModel.findIntersection(
                 List.of(Set.of(meal1), Set.of(meal1, meal3))
@@ -138,7 +141,7 @@ class RecipeModelTest {
 
     // 4. Two ingredients + one area, no category
     @Test
-    void testTwoIngredientsAndArea() {
+    void testTwoIngredientsAndArea() throws IOException {
         Set<Meal> result = mockModel.processMeals(Set.of(ingredient1, ingredient2), null, "Italian");
         Set<Meal> expected = mockModel.findIntersection(
                 List.of(Set.of(meal1, meal2), Set.of(meal1, meal3))
@@ -148,7 +151,7 @@ class RecipeModelTest {
 
     // 5. Single ingredient + one category + one area
     @Test
-    void testSingleIngredientCategoryArea() {
+    void testSingleIngredientCategoryArea() throws IOException {
         Set<Meal> result = mockModel.processMeals(Set.of(ingredient1), "Main", "Italian");
         Set<Meal> expected = mockModel.findIntersection(
                 List.of(Set.of(meal1), Set.of(meal1, meal3), Set.of(meal1, meal3))
@@ -158,7 +161,7 @@ class RecipeModelTest {
 
     // 6. Two ingredients, no category, no area (same as test 2, included for clarity)
     @Test
-    void testTwoIngredientsNoCategoryNoAreaRepeated() {
+    void testTwoIngredientsNoCategoryNoAreaRepeated() throws IOException {
         Set<Meal> result = mockModel.processMeals(Set.of(ingredient1, ingredient2), null, null);
         assertEquals(Set.of(meal1, meal2), result);
     }

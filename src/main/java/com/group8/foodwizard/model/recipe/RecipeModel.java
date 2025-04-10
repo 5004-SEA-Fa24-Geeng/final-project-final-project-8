@@ -39,7 +39,7 @@ public class RecipeModel implements IRecipeModel {
     /** the instance of cached fetcher. */
     private final CachedMealFetcher cachedMealFetcher = new CachedMealFetcher();
 
-    private RecipeModel() throws IOException {
+    RecipeModel() throws IOException {
         // Before entering the page, the model has been initialized (with a null userIngredients)
         // Convert InputStream to Set
         this.allIngredients = JsonParser.allIngredientsList(ApiUtils.getAllIngredients());
