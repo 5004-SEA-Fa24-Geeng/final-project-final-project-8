@@ -63,6 +63,17 @@ class JsonParserTest {
     }
 
     @Test
+    void extractIdMealFail() throws IOException {
+        String json = "{\n" +
+                "  \"meals\": [\n" +
+                "  ]\n" +
+                "}";
+        InputStream inputStream = new ByteArrayInputStream(json.getBytes());
+        Set<Integer> mealIds = JsonParser.extractIdMeal(inputStream);
+        assertEquals(0,mealIds.size());
+    }
+
+    @Test
     void testAllAreasList() throws IOException {
         InputStream inputStream = new ByteArrayInputStream(AREAS_JSON.getBytes());
         Set<String> result = JsonParser.allAreasList(inputStream);
@@ -142,6 +153,35 @@ class JsonParserTest {
         assertEquals("Boil pasta and mix with sauce", recipeData.get("instructions"));
         assertEquals(List.of("Pasta"), recipeData.get("ingredientsList"));
         assertEquals(List.of("200g"), recipeData.get("measuresList"));
+    }
+
+    @Test
+    void testEmptyRecipeData() throws IOException {
+        String json = "{\"meals\":[]}";
+        InputStream input = new ByteArrayInputStream(json.getBytes());
+        Map<String, Object> result = JsonParser.extractRecipeData(input);
+        assertEquals(0, result.size());
+    }
+
+    @Test
+    void testEmptyIngredientList() throws IOException {
+        String json = "{\n" +
+                "  \"meals\": [\n" +
+                "    {\n" +
+                "      \"idMeal\": \"52940\",\n" +
+                "      \"strMeal\": \"Pasta Carbonara\",\n" +
+                "      \"strCategory\": \"Italian\",\n" +
+                "      \"strArea\": \"Italy\",\n" +
+                "      \"strMealThumb\": \"https://www.themealdb.com/images/media/meals/llcbn01574260722.jpg\",\n" +
+                "      \"strYoutube\": \"https://www.youtube.com/watch?v=3AAdKl1UYZs\",\n" +
+                "      \"strInstructions\": \"Boil pasta and mix with sauce\"\n" +
+                "    }\n" +  // <-- properly close the object
+                "  ]\n" +
+                "}";
+        InputStream input = new ByteArrayInputStream(json.getBytes());
+        Map<String, Object> result = JsonParser.extractRecipeData(input);
+        List<String> ingredientList = (List<String>) (result.get("ingredientsList"));
+        assertEquals(0, ingredientList.size());
     }
 
     @Test
