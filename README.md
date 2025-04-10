@@ -22,6 +22,5 @@ Many individuals often find themselves with leftover ingredients and lack ideas 
 - How to run the application
 
 # 📽️ Video Walkthrough
-<img src="img/foodwizard.gif" alt="Food Wizard demo" />
 
 Ask yourself, if you started here in the readme, would you have what you need to work on this project and/or use the application?
