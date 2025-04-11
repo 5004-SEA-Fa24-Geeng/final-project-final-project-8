@@ -113,12 +113,4 @@ public interface IRecipeModel {
      */
     Recipe getRecipeByIdMeal(int idMeal) throws IOException;
 
-    /**
-     * Register an observer to listen to user input changes.
-     * 
-     * @param o The observer to register.
-     */
-    void addObserver(Observer o);
-
-    void notifyObservers();
 }

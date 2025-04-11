@@ -1,5 +1,7 @@
 package com.group8.foodwizard.model.recipe;
 
+import com.group8.foodwizard.model.api.ApiUtils;
+import com.group8.foodwizard.model.formatter.JsonParser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -7,6 +9,10 @@ import java.io.IOException;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
+import com.group8.foodwizard.model.recipe.RecipeModel.CachedMealFetcher;
+
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 
 class RecipeModelTest {
 
@@ -17,6 +23,8 @@ class RecipeModelTest {
     private Meal meal1;
     private Meal meal2;
     private Meal meal3;
+    CachedMealFetcher fetcher;
+
 
     @BeforeEach
     void setUp() throws IOException {
@@ -29,6 +37,17 @@ class RecipeModelTest {
         meal1 = new Meal("Chicken Alfredo Primavera", "https://www.themealdb.com/images/media/meals/syqypv1486981727.jpg", "52796");
         meal2 = new Meal("Chicken Congee", "https://www.themealdb.com/images/media/meals/1529446352.jpg", "52956");
         meal3 = new Meal("Pasta", "thumb3", "103");
+
+        fetcher = new CachedMealFetcher();
+    }
+
+    @Test
+    public void testSingletonReturnsSameInstance() throws IOException {
+        RecipeModel instance1 = RecipeModel.getInstance();
+        RecipeModel instance2 = RecipeModel.getInstance();
+
+        assertNotNull(instance1);
+        assertSame(instance1, instance2, "Both instances should be the same (singleton)");
     }
 
     @Test
@@ -82,6 +101,13 @@ class RecipeModelTest {
     }
 
     @Test
+    void testFindIntersectionWithEmptySet() {
+        List<Set<Meal>> sets = List.of();
+        Set<Meal> result = mockModel.findIntersection(sets);
+        assertEquals(0, result.size());
+    }
+
+    @Test
     void testGetMutualMeals() {
         Set<Meal> mutual = mockModel.getMutualMeals(
                 Set.of(meal1, meal2),
@@ -91,23 +117,6 @@ class RecipeModelTest {
 
         assertEquals(1, mutual.size());
         assertTrue(mutual.contains(meal1));
-    }
-
-    @Test
-    void testSettersNotifyObservers() {
-        class TestObserver implements Observer {
-            int updates = 0;
-            public void update() { updates++; }
-        }
-
-        TestObserver observer = new TestObserver();
-        mockModel.addObserver(observer);
-
-        mockModel.setUserIngredients(Set.of(ingredient1));
-        mockModel.setUserCategory("Main");
-        mockModel.setUserArea("Italian");
-
-        assertEquals(3, observer.updates); // Each setter triggers one update
     }
 
     @Test
@@ -183,7 +192,7 @@ class RecipeModelTest {
         assertEquals(expected, result);
     }
 
-    // 6. Two ingredients, no category, no area (same as test 2, included for clarity)
+    // 6. Two ingredients, no category, no area (same as test 2, included for testing find intersection)
     @Test
     void testTwoIngredientsNoCategoryNoAreaRepeated() throws IOException {
         Set<Meal> result = mockModel.processMeals(Set.of(ingredient1, ingredient2), "Pasta", "Italian");
@@ -194,4 +203,101 @@ class RecipeModelTest {
         );
         assertEquals(expected, result);
     }
+
+    // 7. No ingredients, no category, no area
+    @Test
+    void testNoInputs() throws IOException {
+        Set<Meal> result = mockModel.processMeals(null, null, null);
+        assertTrue(result.isEmpty());
+    }
+
+    // 8. No ingredients, one category, no area
+    @Test
+    void testOnlyCategory() throws IOException {
+        Set<Meal> result = mockModel.processMeals(null, "Pasta", null);
+        System.out.println(result);
+        assertFalse(result.isEmpty());
+    }
+
+    // 9. No ingredients, no category, one area
+    @Test
+    void testOnlyArea() throws IOException {
+        Set<Meal> result = mockModel.processMeals(null, null, "Italian");
+        System.out.println(result);
+        assertFalse(result.isEmpty());
+    }
+
+    // 10. No ingredients, one category, one area
+    @Test
+    void testOnlyCategoryAndArea() throws IOException {
+        Set<Meal> result = mockModel.processMeals(null, "Pasta", "Italian");
+        Set<Meal> expected = mockModel.findIntersection(
+                List.of(mockModel.getMealsByCategory("Pasta"),  mockModel.getMealsByArea("Italian"))
+        );
+        assertEquals(expected, result);
+
+    }
+
+    @Test
+    void testGetMealsByIngredient_whenIOException_thenReturnsEmptySet() {
+        Ingredient fakeIngredient = new Ingredient("1", "Chicken", "image.png");
+        Set<Ingredient> ingredients = Set.of(fakeIngredient);
+
+        try (MockedStatic<ApiUtils> apiMock = org.mockito.Mockito.mockStatic(ApiUtils.class)) {
+            apiMock.when(() -> ApiUtils.getMealsByIngredient("Chicken"))
+                    .thenThrow(new IOException("Mocked IOException"));
+
+            Set<Meal> result = fetcher.getMealsByIngredient(ingredients);
+            assertTrue(result.isEmpty(), "Expected empty set when IOException occurs");
+        }
+    }
+
+    @Test
+    void testGetMealsByCategory_whenIOException_thenReturnsEmptySet() {
+        String category = "Seafood";
+
+        try (
+                MockedStatic<ApiUtils> apiMock = Mockito.mockStatic(ApiUtils.class);
+                MockedStatic<JsonParser> parserMock = Mockito.mockStatic(JsonParser.class)
+        ) {
+            // Simulate a RuntimeException for Exception
+            apiMock.when(() -> ApiUtils.mealsByCategory(category))
+                    .thenThrow(new RuntimeException("Mocked Exception"));
+
+            // mock parser error
+            parserMock.when(() -> JsonParser.extractMeals(Mockito.any()))
+                    .thenReturn(Set.of());
+
+            // call the real method
+            RecipeModel.CachedMealFetcher fetcher = new RecipeModel.CachedMealFetcher();
+            Set<Meal> result = fetcher.getMealsByCategory(category);
+
+            assertTrue(result.isEmpty(), "Expected empty set when RuntimeException occurs");
+        }
+    }
+
+    @Test
+    void testGetMealsByArea_whenIOException_thenReturnsEmptySet() {
+        String area = "Italian";
+
+        try (
+                MockedStatic<ApiUtils> apiMock = Mockito.mockStatic(ApiUtils.class);
+                MockedStatic<JsonParser> parserMock = Mockito.mockStatic(JsonParser.class)
+        ) {
+            // Simulate RuntimeException (broader Exception)
+            apiMock.when(() -> ApiUtils.mealsByArea(area))
+                    .thenThrow(new RuntimeException("Mocked Exception"));
+
+            // mock parser error
+            parserMock.when(() -> JsonParser.extractMeals(Mockito.any()))
+                    .thenReturn(Set.of());
+
+            // Call the actual method
+            RecipeModel.CachedMealFetcher fetcher = new RecipeModel.CachedMealFetcher();
+            Set<Meal> result = fetcher.getMealsByArea(area);
+
+            assertTrue(result.isEmpty(), "Expected empty set when RuntimeException occurs");
+        }
+    }
+
 }

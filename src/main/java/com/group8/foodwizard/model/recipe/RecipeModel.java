@@ -31,14 +31,16 @@ public class RecipeModel implements IRecipeModel {
     String userArea;
 
     /** The only instance of RecipeModel. */
-    private static RecipeModel instance;
-
-    /** List of Observers detects new user submissions. */
-    private final List<Observer> observers = new ArrayList<>();
+    private static RecipeModel instance = null;
 
     /** the instance of cached fetcher. */
     private final CachedMealFetcher cachedMealFetcher = new CachedMealFetcher();
 
+    /**
+     * The {@code RecipeModel} class retrieves and filters
+     * meal data based on user-selected ingredients, category, and area.
+     * It implements the Singleton pattern, Strategy Pattern and a nested class.
+     */
     RecipeModel() throws IOException {
         // Before entering the page, the model has been initialized (with a null userIngredients)
         // Convert InputStream to Set
@@ -47,6 +49,13 @@ public class RecipeModel implements IRecipeModel {
         this.allCategories = JsonParser.allCategoriesList(ApiUtils.getAllCategories());
     }
 
+    /**
+     * Returns the single instance of {@code RecipeModel}.
+     * Ensures data are not reloaded repeatedly.
+     *
+     * @return an instance of {@code RecipeModel}
+     * @throws IOException if instantiation fails
+     */
     // Singleton Pattern: avoid reloading static data like ingredients, areas or categories multiple times
     public static synchronized RecipeModel getInstance() throws IOException {
         // Only one instance of RecipeModel can exist throughout the app
@@ -56,19 +65,6 @@ public class RecipeModel implements IRecipeModel {
         return instance;
     }
 
-    // call this method in Controller
-    // e.g. RecipeModel.getInstance().addObserver(this);
-    @Override
-    public void addObserver(Observer observer) {
-        this.observers.add(observer);
-    }
-
-    @Override
-    public void notifyObservers() {
-        for (Observer observer : this.observers) {
-            observer.update();
-        }
-    }
 
     /**
      * Get all ingredients from online API.
@@ -100,7 +96,15 @@ public class RecipeModel implements IRecipeModel {
         return this.allAreas;
     }
 
-    /** Get the meals based on user input */
+    /**
+     * Processes meals based on user-selected ingredients, category, and area.
+     *
+     * @param userIngredients the user-selected ingredients
+     * @param category        the user-selected category
+     * @param area            the user-selected area
+     * @return a set of meals matching the user-selected params
+     * @throws IOException if data fetching fails
+     */
     @Override
     public Set<Meal> processMeals(Set<Ingredient> userIngredients, String category, String area) throws IOException {
         // pass user inputs into the model
@@ -134,7 +138,12 @@ public class RecipeModel implements IRecipeModel {
         };
     }
 
-    /** Find the intersection of multiple meal sets. */
+    /**
+     * Find the intersection of multiple meal sets.
+     *
+     * @param mealSets a list of sets of meals for intersection
+     * @return the set of meals common to all input sets
+     */
     @Override
     public Set<Meal> findIntersection(List<Set<Meal>> mealSets) {
         if (mealSets.isEmpty()) {
@@ -143,6 +152,7 @@ public class RecipeModel implements IRecipeModel {
 
         Set<Meal> intersection = new HashSet<>(mealSets.get(0));
         for (int i = 1; i < mealSets.size(); i++) {
+            // retainAll() keeps only the elements that are also in the current set
             intersection.retainAll(mealSets.get(i));
         }
         return intersection;
@@ -156,7 +166,6 @@ public class RecipeModel implements IRecipeModel {
     @Override
     public void setUserIngredients(Set<Ingredient> userIngredients) {
         this.userIngredients = userIngredients;
-        notifyObservers();
     }
 
     /**
@@ -167,7 +176,6 @@ public class RecipeModel implements IRecipeModel {
     @Override
     public void setUserCategory(String category) {
         this.userCategory = category;
-        notifyObservers();
     }
 
     /**
@@ -178,7 +186,6 @@ public class RecipeModel implements IRecipeModel {
     @Override
     public void setUserArea(String area) {
         this.userArea = area;
-        notifyObservers();
     }
 
     /**
@@ -246,12 +253,20 @@ public class RecipeModel implements IRecipeModel {
         return JsonParser.mapToRecipe(recipeData);
     }
 
-    /** Nested class for caching. */
+    /**
+     * Internal nested class for caching meal fetch results to avoid redundant API calls.
+     */
     public static class CachedMealFetcher {
         private final Map<String, Set<Meal>> ingredientCache = new HashMap<>();
         private final Map<String, Set<Meal>> categoryCache = new HashMap<>();
         private final Map<String, Set<Meal>> areaCache = new HashMap<>();
 
+        /**
+         * Gets meals from the cache or API based on the user-selected ingredients.
+         *
+         * @param userIngredients the selected ingredients
+         * @return a set of meals containing the user-selected ingredients
+         */
         public Set<Meal> getMealsByIngredient(Set<Ingredient> userIngredients) {
             Set<Meal> mealSetOfUserIngredients = new HashSet<>();
 
@@ -269,25 +284,36 @@ public class RecipeModel implements IRecipeModel {
             return mealSetOfUserIngredients;
         }
 
+        /**
+         * Gets meals from the cache or API based on the user-selected category.
+         *
+         * @param category the selected ingredients
+         * @return a set of meals containing the user-selected category
+         */
         public Set<Meal> getMealsByCategory(String category) {
             return categoryCache.computeIfAbsent(category, c -> {
                 try {
                     return JsonParser.extractMeals(ApiUtils.mealsByCategory(c));
-                } catch (IOException e) {
+                } catch (Exception e) {
                     return Set.of();
                 }
             });
         }
 
+        /**
+         * Gets meals from the cache or API based on the user-selected area.
+         *
+         * @param area the selected ingredients
+         * @return a set of meals containing the user-selected area
+         */
         public Set<Meal> getMealsByArea(String area) {
             return areaCache.computeIfAbsent(area, a -> {
                 try {
                     return JsonParser.extractMeals(ApiUtils.mealsByArea(a));
-                } catch (IOException e) {
+                } catch (Exception e) {
                     return Set.of();
                 }
             });
         }
     }
-
 }
