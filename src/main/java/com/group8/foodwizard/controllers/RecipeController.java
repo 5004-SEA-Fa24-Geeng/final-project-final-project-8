@@ -56,12 +56,9 @@ public class RecipeController {
     }
 
     @PostMapping("/api/getRecipePreviews")
-    public Set<Meal> getRecipes(@RequestBody RecipeRequest recipeRequest) {
+    public Set<Meal> getRecipePreviews(@RequestBody RecipeRequest recipeRequest) {
         try {
             RecipeModel model = RecipeModel.getInstance();
-            System.out.println(recipeRequest.getIngredients());
-            System.out.println(recipeRequest.getCategory());
-            System.out.println(recipeRequest.getRegion());
             return model.processMeals(
                     recipeRequest.getIngredients(),
                     recipeRequest.getCategory(),
@@ -73,7 +70,7 @@ public class RecipeController {
     }
 
     @GetMapping("/api/recipe/{mealId}")
-    public Recipe getRecipeById(@PathVariable int mealId) {
+    public Recipe getRecipeByIdMeal(@PathVariable int mealId) {
         try {
             RecipeModel model = RecipeModel.getInstance();
             return model.getRecipeByIdMeal(mealId);
