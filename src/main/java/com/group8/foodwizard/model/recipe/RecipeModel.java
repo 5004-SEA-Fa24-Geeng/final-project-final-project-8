@@ -31,7 +31,7 @@ public class RecipeModel implements IRecipeModel {
     String userArea;
 
     /** The only instance of RecipeModel. */
-    private static RecipeModel instance;
+    private static RecipeModel instance = null;
 
     /** the instance of cached fetcher. */
     private final CachedMealFetcher cachedMealFetcher = new CachedMealFetcher();
