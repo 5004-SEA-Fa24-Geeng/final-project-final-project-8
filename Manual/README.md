@@ -30,4 +30,4 @@ Use this manual to guide you through the features of the application. You can al
 
 
 # 📽️ Video Walkthrough
-<img src='img/foodwizard.gif' title='Video Walkthrough' alt='Video Walkthrough' />
+![Video Walkthrough](../img/foodwizard.gif)
