@@ -9,7 +9,7 @@ Use this manual to guide you through the features of the application. You can al
   - You can also type in the ingredient name to search.
   - Watch the short instructional clip below:
 
-    <img src="../img/ingredient.gif" alt="ingredient instruction" width="650" />
+    <img src="../img/ingredient.mp4" alt="ingredient instruction" width="650" />
 
 
 
@@ -28,9 +28,9 @@ Use this manual to guide you through the features of the application. You can al
 - [ ] **Download Feature:** If you like a recipe and want to save it, click the download button next to the recipe title.
   - Here's a short video guide on how to download:
 
-    <img src="../img/download.gif" alt="download instruction" width="650" />
+    <img src="../img/download.mp4" alt="download instruction" width="650" />
 
 
 
 # 📽️ Video Walkthrough
-<img src="../img/foodwizard.gif" alt="Video Walkthrough" />
+<img src="../img/foodwizard.mp4" alt="Video Walkthrough" />
