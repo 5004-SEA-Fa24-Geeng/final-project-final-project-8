@@ -19,8 +19,8 @@ Many individuals often find themselves with leftover ingredients and lack ideas 
 [Project Document (Google Doc)](https://docs.google.com/document/d/1VaDUGM-LZnDLe40iMbah4sar-XQG5n3iLFPSMUdu374/edit?usp=sharing)
 
 # 🧰 Instructions
-- How to run the application
+- How to run the application (Ask yourself, if you started here in the readme, would you have what you need to work on this project and/or use the application?
+  )
 
 # 📽️ Video Walkthrough
-
-Ask yourself, if you started here in the readme, would you have what you need to work on this project and/or use the application?
+<img src='img/foodwizard.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
