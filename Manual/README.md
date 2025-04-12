@@ -8,9 +8,10 @@ Use this manual to guide you through the features of the application. You can al
   - Click the `+` button next to the **Ingredients** section.
   - You can also type in the ingredient name to search.
   - Watch the short instructional clip below:
-  ![Search Instruction](../img/ingredient.gif)
+    <img src="../img/ingredient.gif" alt="ingredient instruction" width="350" />
 
-    
+
+
 - [ ] **Optional:** Filter your results by selecting up to one region and one category.
 
 
@@ -25,9 +26,9 @@ Use this manual to guide you through the features of the application. You can al
 
 - [ ] **Download Feature:** If you like a recipe and want to save it, click the download button next to the recipe title.
   - Here's a short video guide on how to download:
-    ![Download Instruction](../img/download.gif)
+    <img src="../img/download.gif" alt="download instruction" width="350" />
 
 
 
 # 📽️ Video Walkthrough
-![Video Walkthrough](../img/foodwizard.gif)
+<img src="../img/foodwizard.gif" alt="Video Walkthrough" width="500" />
