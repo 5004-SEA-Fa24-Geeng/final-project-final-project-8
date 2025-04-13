@@ -16,7 +16,6 @@ import { initializeIngredients } from '@/store/ingredientStore'
 
 export function AddIngredientButton() {
   useEffect(() => {
-    console.log('Initializing ingredients...')
     initializeIngredients()
   }, [])
 
@@ -74,7 +73,7 @@ export function AddIngredientButton() {
           />
           <CommandList className="max-h-[300px] overflow-auto">
             <CommandEmpty>No ingredients found.</CommandEmpty>
-            <CommandGroup heading="Ingredients">
+            <CommandGroup heading={`Ingredients (Search to find more)`}>
               {filteredIngredients.map((ingredient) => (
                 <CommandItem
                   key={ingredient.idIngredient}

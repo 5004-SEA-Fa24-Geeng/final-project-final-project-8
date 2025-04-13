@@ -10,7 +10,7 @@ export function IngredientCard(ingredient: Ingredient) {
       <img
         src={`https://${ingredient.strImage}`}
         alt={ingredient.nameIngredient}
-        className="w-full aspect-square"
+        className="w-full aspect-square bg-gray-200"
       ></img>
       <div className="flex justify-between p-1 m-1">
         <h1
