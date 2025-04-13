@@ -23,4 +23,4 @@ Many individuals often find themselves with leftover ingredients and lack ideas 
   )
 
 # 📽️ Video Walkthrough
-<img src='img/foodwizard.mp4' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='img/foodwizard.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />

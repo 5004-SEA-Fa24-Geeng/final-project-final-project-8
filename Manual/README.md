@@ -5,32 +5,32 @@ Use this manual to guide you through the features of the application. You can al
 ## Getting Started
 
 - [ ] **Required:** Select at least one ingredient from the dropdown list.
-  - Click the `+` button next to the **Ingredients** section.
+  - Click the + button next to the **Ingredients** section.
   - You can also type in the ingredient name to search.
   - Watch the short instructional clip below:
 
-    <img src="../img/ingredient.mp4" alt="ingredient instruction" width="650" />
+    <img src="../img/ingredient.gif" alt="ingredient instruction" width="650" />
 
 
 
 - [ ] **Optional:** Filter your results by selecting up to one region and one category.
 
 
-- [ ] Click the search button `🔍` to generate recipe recommendations.
+- [ ] Click the search button 🔍 to generate recipe recommendations.
 
 
 - [ ] Browse the results in the **Recipes** section.
 
 
-- [ ] Click the `ⓘ` button in the bottom-right corner of a recipe card to view more details.
+- [ ] Click the ⓘ button in the bottom-right corner of a recipe card to view more details.
 
 
 - [ ] **Download Feature:** If you like a recipe and want to save it, click the download button next to the recipe title.
   - Here's a short video guide on how to download:
 
-    <img src="../img/download.mp4" alt="download instruction" width="650" />
+    <img src="../img/download.gif" alt="download instruction" width="650" />
 
 
 
 # 📽️ Video Walkthrough
-<img src="../img/foodwizard.mp4" alt="Video Walkthrough" />
+<img src="../img/foodwizard.gif" alt="Video Walkthrough" />
