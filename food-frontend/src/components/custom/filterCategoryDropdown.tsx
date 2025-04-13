@@ -21,14 +21,16 @@ export function FilterCategoryDropdown() {
   const { setFilterCategory, availableCategories } = useIngredientStore()
 
   useEffect(() => {
-    console.log('Loading Categories...')
     initializeCategories()
   }, [])
 
   return (
     <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
       <DropdownMenuTrigger>
-        <Button variant="outline" className="flex justify-between gap-1 w-40">
+        <Button
+          variant="outline"
+          className="flex justify-between gap-1 w-38 sm:w-40"
+        >
           {selectedCategory}
           <ChevronDown
             className={`h-4 w-4 shrink-0 opacity-50 transition-transform duration-200 ${
@@ -37,7 +39,7 @@ export function FilterCategoryDropdown() {
           />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-40">
+      <DropdownMenuContent className="w-38 sm:w-40">
         <DropdownMenuLabel>Filter by Category</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuRadioGroup

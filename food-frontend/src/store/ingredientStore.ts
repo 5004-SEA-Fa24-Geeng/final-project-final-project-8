@@ -128,7 +128,6 @@ export const fetchRecipePreviews = async () => {
             category: filterCategory,
             region: filterArea
         });
-        console.log('Fetched recipe previews:', response);
         // Store the response in the state
         useIngredientStore.getState().setRecipePreviews(response);
         useIngredientStore.setState({ loadingRecipePreviews: false });
@@ -144,31 +143,6 @@ export const fetchRecipePreviews = async () => {
 export const initializeIngredients = async () => {
     const fetchedIngredients = await fetchIngredients();
     useIngredientStore.setState({ availableIngredients: fetchedIngredients });
-    // const storedIngredients = localStorage.getItem('availableIngredients');
-    // const storedUserIngredients = localStorage.getItem('userIngredients');
-    // if (storedUserIngredients) {
-    //     useIngredientStore.setState({ userIngredients: JSON.parse(storedUserIngredients) });
-    // }
-    // if (storedIngredients) {
-    //     useIngredientStore.setState({ availableIngredients: JSON.parse(storedIngredients) });
-    // } else {
-    //     useIngredientStore.setState({ loading: true });
-    //     try {
-    //         const response = await ingredientService.getAllIngredients();
-
-    //         // Set the ingredients in the store
-    //         useIngredientStore.setState({
-    //             availableIngredients: fetchedIngredients,
-    //             loading: false
-    //         });
-
-    //         // Save to localStorage for future use
-    //         localStorage.setItem('ingredients', JSON.stringify(fetchedIngredients));
-    //     } catch (error) {
-    //         console.error('Failed to fetch ingredients:', error);
-    //         useIngredientStore.setState({ loading: false });
-    //     }
-    // }
 };
 
 export const initializeRegions = async () => {

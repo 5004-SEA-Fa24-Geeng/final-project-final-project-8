@@ -7,14 +7,18 @@ import { RecipePreviewGridCard } from '@/components/custom/RecipePreviewGridCard
 
 function HomePage() {
   return (
-    <div className="flex flex-col w-auto m-2 sm:m-4 p-4 rounded-lg shadow-sm border border-gray-200 gap-4">
+    <div className="flex flex-col w-auto m-2 sm:m-4 p-2 pt-4 sm:p-4 rounded-lg shadow-sm border border-gray-200 gap-4">
       <div>
-        <div className="flex items-center space-x-2 gap-1">
-          <div className="font-bold text-2xl">Ingredients</div>
-          <AddIngredientButton />
-          <FilterRegionDropdown />
-          <FilterCategoryDropdown />
-          <SearchRecipeButton />
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
+          <div className="flex gap-1 items-center">
+            <div className="font-bold text-2xl">Ingredients</div>
+            <AddIngredientButton />
+          </div>
+          <div className="flex gap-1 items-center">
+            <FilterRegionDropdown />
+            <FilterCategoryDropdown />
+            <SearchRecipeButton />
+          </div>
         </div>
         <hr className="border-black my-2" />
         <IngredientGridCard></IngredientGridCard>

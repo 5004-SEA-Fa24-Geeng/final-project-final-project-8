@@ -21,14 +21,16 @@ export function FilterRegionDropdown() {
   const { setFilterRegion, availableRegions } = useIngredientStore()
 
   useEffect(() => {
-    console.log('Loading regions...')
     initializeRegions()
   }, [])
 
   return (
     <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
       <DropdownMenuTrigger>
-        <Button variant="outline" className="flex justify-between gap-1 w-40">
+        <Button
+          variant="outline"
+          className="flex justify-between gap-1 sm:w-40 w-34"
+        >
           {selectedRegion}
           <ChevronDown
             className={`h-4 w-4 shrink-0 opacity-50 transition-transform duration-200 ${
@@ -37,7 +39,7 @@ export function FilterRegionDropdown() {
           />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-40">
+      <DropdownMenuContent className="sm:w-40 w-34">
         <DropdownMenuLabel>Filter by region</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuRadioGroup
