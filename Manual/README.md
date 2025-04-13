@@ -5,7 +5,7 @@ Use this manual to guide you through the features of the application. You can al
 ## Getting Started
 
 - [ ] **Required:** Select at least one ingredient from the dropdown list.
-  - Click the + button next to the **Ingredients** section.
+  - Click the `+` button next to the **Ingredients** section.
   - You can also type in the ingredient name to search.
   - Watch the short instructional clip below:
 
@@ -16,13 +16,21 @@ Use this manual to guide you through the features of the application. You can al
 - [ ] **Optional:** Filter your results by selecting up to one region and one category.
 
 
+<<<<<<< HEAD
 - [ ] Click the search button 🔍 to generate recipe recommendations.
+=======
+- [ ] Click the search button `🔍` to generate recipe recommendations.
+>>>>>>> main
 
 
 - [ ] Browse the results in the **Recipes** section.
 
 
+<<<<<<< HEAD
 - [ ] Click the ⓘ button in the bottom-right corner of a recipe card to view more details.
+=======
+- [ ] Click the `ⓘ` button in the bottom-right corner of a recipe card to view more details.
+>>>>>>> main
 
 
 - [ ] **Download Feature:** If you like a recipe and want to save it, click the download button next to the recipe title.
@@ -33,4 +41,8 @@ Use this manual to guide you through the features of the application. You can al
 
 
 # 📽️ Video Walkthrough
+<<<<<<< HEAD
 <img src="../img/foodwizard.gif" alt="Video Walkthrough" />
+=======
+<img src="../img/foodwizard.gif" alt="Video Walkthrough" />
+>>>>>>> main
