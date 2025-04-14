@@ -225,21 +225,6 @@ public class RecipeModel implements IRecipeModel {
     }
 
     /**
-     * Get meals which exist in both given sets.
-     *
-     * @param mealSet1 the first given set of meals
-     * @param mealSet2 the second given set of meals
-     * @return A set of meal objects that exist in both given sets
-     */
-    @Override
-    public Set<Meal> getMutualMeals(Set<Meal> mealSet1, Set<Meal> mealSet2, Set<Meal> mealSet3) {
-        return mealSet1.stream()
-                .filter(mealSet2::contains)
-                .filter(mealSet3::contains)
-                .collect(Collectors.toSet());
-    }
-
-    /**
      * Retrieves a recipe based on a given meal ID.
      *
      * @param idMeal A set of meal ids.

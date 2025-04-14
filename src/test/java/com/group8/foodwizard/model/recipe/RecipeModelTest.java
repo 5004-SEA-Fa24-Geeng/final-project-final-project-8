@@ -108,18 +108,6 @@ class RecipeModelTest {
     }
 
     @Test
-    void testGetMutualMeals() {
-        Set<Meal> mutual = mockModel.getMutualMeals(
-                Set.of(meal1, meal2),
-                Set.of(meal1, meal3),
-                Set.of(meal1)
-        );
-
-        assertEquals(1, mutual.size());
-        assertTrue(mutual.contains(meal1));
-    }
-
-    @Test
     void testGetRecipeByIdMeal() throws IOException {
         Recipe recipe = mockModel.getRecipeByIdMeal(Integer.parseInt(meal1.idMeal()));
         assertNotNull(recipe);

@@ -95,16 +95,6 @@ public interface IRecipeModel {
     Set<Meal> getMealsByArea(String area) throws IOException;
 
     /**
-     * Get meals that exist in all three provided sets.
-     * 
-     * @param mealSet1 First meal set.
-     * @param mealSet2 Second meal set.
-     * @param mealSet3 Third meal set.
-     * @return A set of mutual meals in all three sets.
-     */
-    Set<Meal> getMutualMeals(Set<Meal> mealSet1, Set<Meal> mealSet2, Set<Meal> mealSet3);
-
-    /**
      * Retrieves a recipe based on a given meal ID.
      * 
      * @param idMeal The meal ID.
