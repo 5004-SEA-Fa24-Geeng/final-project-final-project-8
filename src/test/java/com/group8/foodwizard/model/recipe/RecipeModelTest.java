@@ -9,6 +9,9 @@ import java.io.IOException;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.times;
+
 import com.group8.foodwizard.model.recipe.RecipeModel.CachedMealFetcher;
 
 import org.mockito.MockedStatic;
@@ -231,7 +234,7 @@ class RecipeModelTest {
         Ingredient fakeIngredient = new Ingredient("1", "Chicken", "image.png");
         Set<Ingredient> ingredients = Set.of(fakeIngredient);
 
-        try (MockedStatic<ApiUtils> apiMock = org.mockito.Mockito.mockStatic(ApiUtils.class)) {
+        try (MockedStatic<ApiUtils> apiMock = mockStatic(ApiUtils.class)) {
             apiMock.when(() -> ApiUtils.getMealsByIngredient("Chicken"))
                     .thenThrow(new IOException("Mocked IOException"));
 
@@ -245,8 +248,8 @@ class RecipeModelTest {
         String category = "Seafood";
 
         try (
-                MockedStatic<ApiUtils> apiMock = Mockito.mockStatic(ApiUtils.class);
-                MockedStatic<JsonParser> parserMock = Mockito.mockStatic(JsonParser.class)
+                MockedStatic<ApiUtils> apiMock = mockStatic(ApiUtils.class);
+                MockedStatic<JsonParser> parserMock = mockStatic(JsonParser.class)
         ) {
             // Simulate a RuntimeException for Exception
             apiMock.when(() -> ApiUtils.mealsByCategory(category))
@@ -269,8 +272,8 @@ class RecipeModelTest {
         String area = "Italian";
 
         try (
-                MockedStatic<ApiUtils> apiMock = Mockito.mockStatic(ApiUtils.class);
-                MockedStatic<JsonParser> parserMock = Mockito.mockStatic(JsonParser.class)
+                MockedStatic<ApiUtils> apiMock = mockStatic(ApiUtils.class);
+                MockedStatic<JsonParser> parserMock = mockStatic(JsonParser.class)
         ) {
             // Simulate RuntimeException (broader Exception)
             apiMock.when(() -> ApiUtils.mealsByArea(area))
@@ -288,4 +291,70 @@ class RecipeModelTest {
         }
     }
 
+    @Test
+    void testIngredientCaching() {
+        CachedMealFetcher fetcher = new CachedMealFetcher();
+        Ingredient lime = new Ingredient("202", "Lime", "");
+        Set<Ingredient> ingredients = Set.of(lime);
+
+        Meal mockMeal = new Meal("MockMeal", "mockThumb", "1");
+        Set<Meal> mockMeals = Set.of(mockMeal);
+
+        try (MockedStatic<ApiUtils> mocked = mockStatic(ApiUtils.class)) {
+            mocked.when(() -> ApiUtils.getMealsByIngredient("Lime")).thenReturn(mockMeals);
+
+            // First call: API should be used
+            Set<Meal> first = fetcher.getMealsByIngredient(ingredients);
+            assertEquals(mockMeals, first);
+
+            // Second call: should be cached
+            Set<Meal> second = fetcher.getMealsByIngredient(ingredients);
+            assertEquals(mockMeals, second);
+
+            // Verify API called only once
+            mocked.verify(() -> ApiUtils.getMealsByIngredient("Lime"), times(1));
+        }
+    }
+
+    @Test
+    void testCategoryCaching() {
+        CachedMealFetcher fetcher = new CachedMealFetcher();
+        Set<Meal> mockMeals = Set.of(new Meal("MockMeal", "mockThumb", "1"));
+
+        try (MockedStatic<ApiUtils> mocked = mockStatic(ApiUtils.class);
+             MockedStatic<JsonParser> jsonMock = mockStatic(JsonParser.class)) {
+
+            mocked.when(() -> ApiUtils.mealsByCategory("Beef")).thenReturn(null);
+            jsonMock.when(() -> JsonParser.extractMeals(null)).thenReturn(mockMeals);
+
+            // Call twice
+            fetcher.getMealsByCategory("Beef");
+            fetcher.getMealsByCategory("Beef");
+
+            // Verify both calls only once
+            mocked.verify(() -> ApiUtils.mealsByCategory("Beef"), times(1));
+            jsonMock.verify(() -> JsonParser.extractMeals(null), times(1));
+        }
+    }
+
+    @Test
+    void testAreaCaching() {
+        CachedMealFetcher fetcher = new CachedMealFetcher();
+        Set<Meal> mockMeals = Set.of(new Meal("MockMeal", "mockThumb", "1"));
+
+        try (MockedStatic<ApiUtils> mocked = mockStatic(ApiUtils.class);
+             MockedStatic<JsonParser> jsonMock = mockStatic(JsonParser.class)) {
+
+            mocked.when(() -> ApiUtils.mealsByArea("American")).thenReturn(null);
+            jsonMock.when(() -> JsonParser.extractMeals(null)).thenReturn(mockMeals);
+
+            // Call twice
+            fetcher.getMealsByArea("American");
+            fetcher.getMealsByArea("American");
+
+            // Verify both calls only once
+            mocked.verify(() -> ApiUtils.mealsByArea("American"), times(1));
+            jsonMock.verify(() -> JsonParser.extractMeals(null), times(1));
+        }
+    }
 }
