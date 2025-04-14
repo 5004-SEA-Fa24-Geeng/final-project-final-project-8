@@ -41,7 +41,7 @@ public class RecipeModel implements IRecipeModel {
      * meal data based on user-selected ingredients, category, and area.
      * It implements the Singleton pattern, Strategy Pattern and a nested class.
      */
-    RecipeModel() throws IOException {
+    private RecipeModel() throws IOException {
         // Before entering the page, the model has been initialized (with a null userIngredients)
         // Convert InputStream to Set
         this.allIngredients = JsonParser.allIngredientsList(ApiUtils.getAllIngredients());
@@ -63,6 +63,11 @@ public class RecipeModel implements IRecipeModel {
             instance = new RecipeModel();
         }
         return instance;
+    }
+
+    /** Helper for testing only: reset the singleton */
+    static void resetInstanceForTest() {
+        instance = null;
     }
 
 
