@@ -5,6 +5,7 @@ import com.group8.foodwizard.model.formatter.JsonParser;
 import com.group8.foodwizard.model.recipe.strategy.GetMealByArea;
 import com.group8.foodwizard.model.recipe.strategy.GetMealByCategory;
 import com.group8.foodwizard.model.recipe.strategy.GetMealByIngredient;
+import com.group8.foodwizard.model.recipe.strategy.IGetMealStrategy;
 
 import java.io.IOException;
 import java.util.*;
@@ -112,27 +113,21 @@ public class RecipeModel implements IRecipeModel {
      */
     @Override
     public Set<Meal> processMeals(Set<Ingredient> userIngredients, String category, String area) throws IOException {
-        // pass user inputs into the model
+        // pass user-selected filters into the model
         setUserIngredients(userIngredients);
         setUserCategory(category);
         setUserArea(area);
 
-        // collect all non-empty meal sets
-        List<Set<Meal>> mealSets = new ArrayList<>();
+        List<Set<Meal>> mealSets = new ArrayList<>();  // to collect all non-empty meal sets
+        List<IGetMealStrategy> strategies = new ArrayList<>();  // to collect all strategies for strategy pattern
 
-        // if the user selected ingredients, apply IngredientFilterStrategy
-        if (this.userIngredients != null) {
-            mealSets.add(new GetMealByIngredient(this.userIngredients, cachedMealFetcher).getMeals());
-        }
+        // select strategies based on user-selected filters (ingredients, category, area)
+        if (userIngredients != null) { strategies.add(new GetMealByIngredient(userIngredients, cachedMealFetcher)); }
+        if (userCategory != null) { strategies.add(new GetMealByCategory(userCategory, cachedMealFetcher)); }
+        if (userArea != null) { strategies.add(new GetMealByArea(userArea, cachedMealFetcher)); }
 
-        // if the user selected a category, apply CategoryFilterStrategy
-        if (this.userCategory != null) {
-            mealSets.add(new GetMealByCategory(this.userCategory, cachedMealFetcher).getMeals());
-        }
-
-        // if the user selected an area, apply AreaFilterStrategy
-        if (this.userArea != null) {
-            mealSets.add(new GetMealByArea(this.userArea, cachedMealFetcher).getMeals());
+        for (IGetMealStrategy strategy : strategies) {
+            mealSets.add(strategy.getMeals());  // execute interchangeable behaviors (getMeals() is abstract)
         }
 
         // handle different cases of user inputs

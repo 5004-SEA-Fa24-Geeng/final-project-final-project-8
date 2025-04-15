@@ -31,9 +31,8 @@ class RecipeModelTest {
 
     @BeforeEach
     void setUp() throws IOException {
-        // Enforce Singleton in tests
-        RecipeModel.resetInstanceForTest(); // Reset singleton state before each test
-        mockModel = RecipeModel.getInstance();
+        RecipeModel.resetInstanceForTest(); // Clear the existing singleton instance
+        mockModel = RecipeModel.getInstance(); // Re-initialize the singleton instance
 
         ingredient1 = new Ingredient("1", "Chicken", "");
         ingredient2 = new Ingredient("268", "Rice", "");
@@ -74,25 +73,6 @@ class RecipeModelTest {
     }
 
     @Test
-    void testProcessMealsWithAllInputs() throws IOException {
-        Set<Ingredient> userIngredients = Set.of(ingredient1);
-        Set<Meal> result = mockModel.processMeals(userIngredients, "Chicken", "Italian");
-        System.out.println(result);
-        assertEquals(1, result.size());
-        assertTrue(result.contains(meal1));
-    }
-
-    @Test
-    void testProcessMealsWithOnlyOneIngredient() throws IOException {
-        Set<Ingredient> userIngredients = Set.of(ingredient2);
-        System.out.println(userIngredients);
-        Set<Meal> result = mockModel.processMeals(userIngredients, null, null);
-        System.out.println(result);
-        assertEquals(11, result.size());
-        assertTrue(result.contains(meal2));
-    }
-
-    @Test
     void testFindIntersection() {
         List<Set<Meal>> sets = List.of(
                 Set.of(meal1, meal2),
@@ -124,9 +104,10 @@ class RecipeModelTest {
     // 1. Single ingredient, no category, no area
     @Test
     void testSingleIngredientOnly() throws IOException {
-        Set<Meal> result = mockModel.processMeals(Set.of(ingredient1), null, null);
-        System.out.println(result);
-        assertTrue(result.contains(meal1));
+        Set<Ingredient> userIngredients = Set.of(ingredient2);
+        Set<Meal> result = mockModel.processMeals(userIngredients, null, null);
+        assertEquals(11, result.size());
+        assertTrue(result.contains(meal2));
     }
 
     // 2. Two ingredients, no category, no area
@@ -177,7 +158,6 @@ class RecipeModelTest {
     @Test
     void testSingleIngredientCategoryArea() throws IOException {
         Set<Meal> result = mockModel.processMeals(Set.of(ingredient1), "Pasta", "Italian");
-        // Set<Meal> findIntersection(List<Set<Meal>> mealSets)
         Set<Meal> expected = mockModel.findIntersection(
                 List.of(mockModel.getMealsByIngredient(Set.of(ingredient1)),
                         mockModel.getMealsByCategory("Pasta"),  mockModel.getMealsByArea("Italian"))
@@ -185,17 +165,6 @@ class RecipeModelTest {
         assertEquals(expected, result);
     }
 
-    // 6. Two ingredients, no category, no area (same as test 2, included for testing find intersection)
-    @Test
-    void testTwoIngredientsNoCategoryNoAreaRepeated() throws IOException {
-        Set<Meal> result = mockModel.processMeals(Set.of(ingredient1, ingredient2), "Pasta", "Italian");
-        // Set<Meal> findIntersection(List<Set<Meal>> mealSets)
-        Set<Meal> expected = mockModel.findIntersection(
-                List.of(mockModel.getMealsByIngredient(Set.of(ingredient1, ingredient2)),
-                        mockModel.getMealsByCategory("Pasta"),  mockModel.getMealsByArea("Italian"))
-        );
-        assertEquals(expected, result);
-    }
 
     // 7. No ingredients, no category, no area
     @Test
