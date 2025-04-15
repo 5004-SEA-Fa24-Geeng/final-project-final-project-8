@@ -5,6 +5,7 @@ import com.group8.foodwizard.model.formatter.JsonParser;
 import com.group8.foodwizard.model.recipe.strategy.GetMealByArea;
 import com.group8.foodwizard.model.recipe.strategy.GetMealByCategory;
 import com.group8.foodwizard.model.recipe.strategy.GetMealByIngredient;
+import com.group8.foodwizard.model.recipe.strategy.IGetMealStrategy;
 
 import java.io.IOException;
 import java.util.*;
@@ -41,7 +42,7 @@ public class RecipeModel implements IRecipeModel {
      * meal data based on user-selected ingredients, category, and area.
      * It implements the Singleton pattern, Strategy Pattern and a nested class.
      */
-    RecipeModel() throws IOException {
+    private RecipeModel() throws IOException {
         // Before entering the page, the model has been initialized (with a null userIngredients)
         // Convert InputStream to Set
         this.allIngredients = JsonParser.allIngredientsList(ApiUtils.getAllIngredients());
@@ -63,6 +64,11 @@ public class RecipeModel implements IRecipeModel {
             instance = new RecipeModel();
         }
         return instance;
+    }
+
+    /** Helper for testing only: reset the singleton */
+    static void resetInstanceForTest() {
+        instance = null;
     }
 
 
@@ -107,27 +113,21 @@ public class RecipeModel implements IRecipeModel {
      */
     @Override
     public Set<Meal> processMeals(Set<Ingredient> userIngredients, String category, String area) throws IOException {
-        // pass user inputs into the model
+        // pass user-selected filters into the model
         setUserIngredients(userIngredients);
         setUserCategory(category);
         setUserArea(area);
 
-        // collect all non-empty meal sets
-        List<Set<Meal>> mealSets = new ArrayList<>();
+        List<Set<Meal>> mealSets = new ArrayList<>();  // to collect all non-empty meal sets
+        List<IGetMealStrategy> strategies = new ArrayList<>();  // to collect all strategies for strategy pattern
 
-        // if the user selected ingredients, apply IngredientFilterStrategy
-        if (this.userIngredients != null) {
-            mealSets.add(new GetMealByIngredient(this.userIngredients, cachedMealFetcher).getMeals());
-        }
+        // select strategies based on user-selected filters (ingredients, category, area)
+        if (userIngredients != null) { strategies.add(new GetMealByIngredient(userIngredients, cachedMealFetcher)); }
+        if (userCategory != null) { strategies.add(new GetMealByCategory(userCategory, cachedMealFetcher)); }
+        if (userArea != null) { strategies.add(new GetMealByArea(userArea, cachedMealFetcher)); }
 
-        // if the user selected a category, apply CategoryFilterStrategy
-        if (this.userCategory != null) {
-            mealSets.add(new GetMealByCategory(this.userCategory, cachedMealFetcher).getMeals());
-        }
-
-        // if the user selected an area, apply AreaFilterStrategy
-        if (this.userArea != null) {
-            mealSets.add(new GetMealByArea(this.userArea, cachedMealFetcher).getMeals());
+        for (IGetMealStrategy strategy : strategies) {
+            mealSets.add(strategy.getMeals());  // execute interchangeable behaviors (getMeals() is abstract)
         }
 
         // handle different cases of user inputs
@@ -222,21 +222,6 @@ public class RecipeModel implements IRecipeModel {
     @Override
     public Set<Meal> getMealsByArea(String area) {
         return cachedMealFetcher.getMealsByArea(area);
-    }
-
-    /**
-     * Get meals which exist in both given sets.
-     *
-     * @param mealSet1 the first given set of meals
-     * @param mealSet2 the second given set of meals
-     * @return A set of meal objects that exist in both given sets
-     */
-    @Override
-    public Set<Meal> getMutualMeals(Set<Meal> mealSet1, Set<Meal> mealSet2, Set<Meal> mealSet3) {
-        return mealSet1.stream()
-                .filter(mealSet2::contains)
-                .filter(mealSet3::contains)
-                .collect(Collectors.toSet());
     }
 
     /**

@@ -21,8 +21,6 @@ import java.util.List;
  * @return the recipe
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-// recipeId, recipeName, instructions, image, youtube, category, area,
-// ingredients, measures
 @JsonPropertyOrder({ "recipeId", "recipeName", "instructions", "image",
         "youtube", "category", "area", "ingredients", "measures" })
 public record Recipe(int recipeId, String recipeName, String instructions, String image,
