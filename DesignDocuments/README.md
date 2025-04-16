@@ -167,6 +167,8 @@ class GetMealByArea {
 
 ```
 
+## Front-end Mockup Design
+<img src='../img/interface_design.png' title='mockup' alt='mockup' />
 
 ## Program Flow
 ![Food Wizard App Flow Chart](Food%20Wizard%20App%20Flow%20Chart_.png)
