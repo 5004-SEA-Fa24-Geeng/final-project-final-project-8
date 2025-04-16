@@ -5,6 +5,10 @@ You may have multiple design documents for this project. Place them all in this 
 ### Full project details - [Project Document (Google Doc)](https://docs.google.com/document/d/1VaDUGM-LZnDLe40iMbah4sar-XQG5n3iLFPSMUdu374/edit?usp=sharing)
 
 ## Initial UML
+<img src='../img/initial_uml.jpg' title='initial uml' alt='initial uml' />
+
+
+## Final UML
 ```mermaid
 classDiagram
 
@@ -163,8 +167,8 @@ class GetMealByArea {
 
 ```
 
-## Final UML
-
+## Front End Mockup Design
+<img src='../img/interface_design.png' title='mockup' alt='mockup' />
 
 ## Program Flow
 ![Food Wizard App Flow Chart](Food%20Wizard%20App%20Flow%20Chart_.png)

@@ -50,6 +50,17 @@ public final class JsonParser {
         return mealIds;
     }
 
+    /**
+     * Extracts a set of {@link Meal} objects from a JSON-formatted {@link InputStream}.
+     * <p>
+     * The input stream is expected to contain a JSON object with a "meals" array,
+     * where each meal object includes "strMeal", "strMealThumb", and "idMeal" fields.
+     * If the "meals" array is empty or not present, an empty set is returned.
+     *
+     * @param input the input stream containing JSON data from an API or file
+     * @return a set of {@link Meal} objects parsed from the JSON input
+     * @throws IOException if there is an error reading or parsing the input stream
+     */
     public static Set<Meal> extractMeals(InputStream input) throws IOException {
         Set<Meal> meals = new HashSet<>();
         ObjectMapper mapper = new ObjectMapper();
