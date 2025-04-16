@@ -19,9 +19,7 @@ Many individuals often find themselves with leftover ingredients and lack ideas 
 [Project Document (Google Doc)](https://docs.google.com/document/d/1VaDUGM-LZnDLe40iMbah4sar-XQG5n3iLFPSMUdu374/edit?usp=sharing)
 
 # 🧰 Instructions
-- How to run the application (Ask yourself, if you started here in the readme, would you have what you need to work on this project and/or use the application?
-  )
-
+(Developer) How to run the program?
 1. Clone the repository to your local machine.
 2. Navigate to the project directory in your terminal.
 3. Run the following command to run the app in your local machine:
@@ -30,6 +28,9 @@ Many individuals often find themselves with leftover ingredients and lack ideas 
     gradlew.bat build # Window
     ```
 4. The app should be running on your local machine. Open your web browser and go to `http://localhost:8080` to access the application.
+
+(User) How to use Food Wizard?
+[Manual](../Manual/README.md)
 
 # 📽️ Video Walkthrough
 <img src='img/foodwizard.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
