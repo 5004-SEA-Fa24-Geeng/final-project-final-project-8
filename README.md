@@ -29,8 +29,7 @@ Many individuals often find themselves with leftover ingredients and lack ideas 
     ```
 4. The app should be running on your local machine. Open your web browser and go to `http://localhost:8080` to access the application.
 
-(User) How to use Food Wizard?
-[Manual](../Manual/README.md)
+* **For user manual, please refer to: [Manual](Manual/README.md)**
 
 # 📽️ Video Walkthrough
 <img src='img/foodwizard.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
