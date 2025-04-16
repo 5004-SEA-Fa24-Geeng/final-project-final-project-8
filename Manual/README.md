@@ -29,37 +29,41 @@ Use this manual to guide you through the features of the application. You can al
 
     <img src="../img/download.gif" alt="download instruction" width="650" />
 
+  
+## Implemented Features
 
+### Required Features
+
+- [x] **View all items in the collection in a logical order**
+  - Ingredients, regions, and categories are displayed in alphabetical order for easy navigation.
+
+- [x] **Build a list of items from the collection**
+  - After the user clicks the **Search** button, the selected ingredients are compiled, and a list of recommended recipes is displayed.
+
+- [x] **Save the list using a supported file format (.xml, .json, or .csv)**
+  - On the recipe detail page, users can download recipe details as a **JSON** file via the download button next to the recipe name.
+
+### Additional Features
+
+- [x] **Load and modify previously saved lists**
+  - Implemented caching to remember the user's previous selections, allowing persistent and editable session history.
+
+- [x] **Search for items in the collection**
+  - Users can search for ingredients by typing in the name within the ingredient selection section.
+
+- [x] **Filter items in the collection**
+  - Users can filter by **category** and **region** to narrow down search results.
+
+- [x] **Fetch item list from an online API**
+  - Integrated data from **7 different APIs** to populate the application content dynamically.
+
+- [x] **Include images for items**
+  - Images are shown for both **ingredients** and **recipes**. Recipe detail pages also include **video tutorials**.
+
+- [x] **Persist modifications across sessions**
+  - User selections are cached to ensure a seamless experience across page reloads or revisits.
+  
 
 ## 📽️ Video Walkthrough
 <img src="../img/foodwizard.gif" alt="Video Walkthrough" />
 
-## Implemented Features
-### Required Features
-- [x] Be able to view all items in the collection - in a logical order
-  - In the user selection part, we display all the ingredients, regions, and categories in alphabetical order.
-
-- [x] Be able to build a list of items from the collection
-  - After user clicks the search button, a list of ingredients that user chose us built, as well as a list of recommended recipes.
-
-- [x] Be able to save out that list using a file format we covered in the course such as .xml, .json, or .csv.
-  - On the recipe detail page, user can download the recipe details as a JSON file by clicking the download button next to the recipe name.
-
-### Additional Features
-- [x] Be able to load in lists of items / previously saved lists, and modify them.  (Cache)
-  - Implement cache to memorize previous user selection
-- 
-- [x] Be able to search for items in the collection
-  - When selecting the ingredients, user can type in the ingredient name to search for it.
-
-- [x] Be able to filter items in the collection
-  - Allow user to select a specific category and region as additional filter.
-
-- [x] Have your original item list come from an online API/online access.
-  - We used 7 apis to get all the data.
-
-- [x] Include images for your items
-  - Display images for ingredients and recipes, and display video tutorial on recipe detail page.
-
-- [x] Have the ability to modify a local copy of an item, and those modifications remain persistent across sessions. (Cache)
-  - Implemented cache to memorize previous user selection
