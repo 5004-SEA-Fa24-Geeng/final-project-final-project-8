@@ -24,17 +24,17 @@ Many individuals often find themselves with leftover ingredients and lack ideas 
 
 # 🧰 Instructions
 
-**For user manual and features, please refer to: [Manual](Manual/README.md)**
+***For user manual and features, please refer to: [Manual](Manual/README.md)**
 
-Developer - How to run the program?
-1. Clone the repository to your local machine.
-2. Navigate to the project directory in your terminal.
-3. Run the following command to run the app in your local machine:
-    ```bash
-    ./gradlew build # Linux/Mac
-    gradlew.bat build # Window
-    ```
-4. The app should be running on your local machine. Open your web browser and go to `http://localhost:8080` to access the application.
+***(Developer) How to run the program?**
+   1. Clone the repository to your local machine.
+   2. Navigate to the project directory in your terminal.
+   3. Run the following command to run the app in your local machine:
+       ```bash
+       ./gradlew build # Linux/Mac
+       gradlew.bat build # Window
+       ```
+   4. The app should be running on your local machine. Open your web browser and go to `http://localhost:8080` to access the application.
 
 
 ## 📽️ Video Walkthrough
