@@ -9,9 +9,21 @@ import org.springframework.web.servlet.resource.PathResourceResolver;
 
 import java.io.IOException;
 
+/**
+ * Configuration class for serving a Single Page Application (SPA) such as a React frontend
+ * from the Spring Boot backend. Ensures proper routing of static files and fallback to index.html
+ * for SPA client-side routing.
+ */
 @Configuration
 public class SpaWebMvcConfigurer implements WebMvcConfigurer {
 
+    /**
+     * Configures how static resources are served.
+     * Maps all requests to the `/static` directory and ensures that SPA routes
+     * fallback to serving `index.html` instead of returning 404 errors.
+     *
+     * @param registry the resource handler registry to configure
+     */
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         // Ensure static assets from React build (js, css, images) are served
@@ -37,6 +49,13 @@ public class SpaWebMvcConfigurer implements WebMvcConfigurer {
                 });
     }
 
+    /**
+     * Determines if a given path is an API request.
+     * Prevents API routes from being handled by the SPA fallback logic.
+     *
+     * @param path the requested path
+     * @return true if the path is an API call, false otherwise
+     */
     // Helper method to avoid forwarding API calls to index.html
     // Adjust the pattern based on your API paths
     private boolean isApiRequest(String path) {
