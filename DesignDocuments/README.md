@@ -167,7 +167,7 @@ class GetMealByArea {
 
 ```
 
-## Front-end Mockup Design
+## Front End Mockup Design
 <img src='../img/interface_design.png' title='mockup' alt='mockup' />
 
 ## Program Flow
