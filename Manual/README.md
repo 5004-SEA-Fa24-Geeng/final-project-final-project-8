@@ -31,6 +31,6 @@ Use this manual to guide you through the features of the application. You can al
 
 
 
-# 📽️ Video Walkthrough
+## 📽️ Video Walkthrough
 <img src="../img/foodwizard.gif" alt="Video Walkthrough" />
 
