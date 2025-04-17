@@ -95,7 +95,7 @@ class JsonParserTest {
                 + "}";
         InputStream inputStream = new ByteArrayInputStream(json.getBytes());
         Set<Integer> mealIds = JsonParser.extractIdMeal(inputStream);
-        assertEquals(0,mealIds.size());
+        assertEquals(0, mealIds.size());
     }
 
     @Test

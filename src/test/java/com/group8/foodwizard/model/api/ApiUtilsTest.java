@@ -62,13 +62,12 @@ public class ApiUtilsTest {
     void testGetMealsSetByIngredient() throws IOException {
         Set<Meal> expected = new HashSet<>();
         expected.add(new Meal("Honey Balsamic Chicken with Crispy Broccoli & Potatoes",
-                "https://www.themealdb.com/images/media/meals/kvbotn1581012881.jpg","52993"));
+                "https://www.themealdb.com/images/media/meals/kvbotn1581012881.jpg", "52993"));
         String ingredientName = "Balsamic Vinegar";
         try {
             Set<Meal> result = ApiUtils.getMealsByIngredient(ingredientName);
             assertEquals(expected, result);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new IOException("exception");
         }
     }
