@@ -31,6 +31,7 @@ dependencies {
 
 checkstyle {
 	configFile = file("${rootDir}/checkstyle-rules.xml")
+	sourceSets = [sourceSets.main]
 }
 
 jacoco {
