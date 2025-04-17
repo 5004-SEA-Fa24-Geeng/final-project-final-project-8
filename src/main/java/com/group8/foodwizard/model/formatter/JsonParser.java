@@ -20,17 +20,17 @@ import java.util.*;
 public final class JsonParser {
 
     /**
-     * Constant for the maximum number of ingredients in a single recipe
+     * Constant for the maximum number of ingredients in a single recipe.
      */
     private static final int MAX_INGREDIENT_COUNT = 20;
 
     /**
-     * URL format for ingredient image
+     * URL format for ingredient image.
      */
     private static final String INGREDIENT_IMAGE = "www.themealdb.com/images/ingredients/%s-medium.png";
 
     /**
-     * Private constructor to prevent instantiation
+     * Private constructor to prevent instantiation.
      */
     private JsonParser() {
         //empty
