@@ -17,18 +17,34 @@ import java.util.Set;
  */
 public final class ApiUtils {
 
-    // URL to get all ingredient/category/area information depending on the code provided.
+    /**
+     * URL to get all ingredient/category/area information depending on the code provided.
+     */
     private static final String ALL_LIST = "https://www.themealdb.com/api/json/v1/1/list.php?%s=list";
-    // URL to search meals by ingredient. Use this link to get idMeal.
+
+    /**
+     * URL to search meals by ingredient. Use this link to get idMeal.
+     */
     private static final String GET_IDMEAL = "https://www.themealdb.com/api/json/v1/1/filter.php?i=%s";
-    // URL to search recipe by idMeal.
+
+    /**
+     * URL to search recipe by idMeal.
+     */
     private static final String GET_RECIPE = "https://www.themealdb.com/api/json/v1/1/lookup.php?i=%d";
-    // URL to search meals by category
+
+    /**
+     * URL to search meals by category.
+     */
     private static final String CATEGORY = "https://www.themealdb.com/api/json/v1/1/filter.php?c=%s";
-    // URL to search meals by area
+
+    /**
+     * URL to search meals by area.
+     */
     private static final String AREA = "https://www.themealdb.com/api/json/v1/1/filter.php?a=%s";
 
-    // Private constructor to prevent instantiation
+    /**
+     * Private constructor to prevent instantiation.
+     */
     private ApiUtils() {
         // Prevent instantiation
     }
