@@ -10,9 +10,9 @@ import org.springframework.web.servlet.resource.PathResourceResolver;
 import java.io.IOException;
 
 /**
- * Configuration class for serving a Single Page Application (SPA) such as a React frontend
- * from the Spring Boot backend. Ensures proper routing of static files and fallback to index.html
- * for SPA client-side routing.
+ * Configuration class for serving a Single Page Application (SPA) such as a
+ * React frontend from the Spring Boot backend. Ensures proper routing of static
+ * files and fallback to index.html for SPA client-side routing.
  */
 @Configuration
 public class SpaWebMvcConfigurer implements WebMvcConfigurer {

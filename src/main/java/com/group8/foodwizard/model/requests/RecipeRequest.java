@@ -5,15 +5,27 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Represents a request object used to filter recipes based on selected ingredients,
- * region (area), and category.
+ * Represents a request object used to filter recipes based on selected
+ * ingredients, region (area), and category.
  *
- * <p>This class is typically used as the payload for POST requests when retrieving
+ * <p>
+ * This class is typically used as the payload for POST requests when retrieving
  * recipe previews that match user-selected filters.
  */
 public class RecipeRequest {
+    /**
+     * The set of ingredients selected for filtering recipes.
+     */
     private Set<Ingredient> ingredients;
+
+    /**
+     * The region (area) selected for filtering recipes.
+     */
     private String region;
+
+    /**
+     * The category selected for filtering recipes.
+     */
     private String category;
 
     /**
