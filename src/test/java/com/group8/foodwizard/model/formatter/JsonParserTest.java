@@ -4,7 +4,6 @@ import com.group8.foodwizard.model.api.ApiUtils;
 import com.group8.foodwizard.model.recipe.Ingredient;
 import com.group8.foodwizard.model.recipe.Meal;
 import com.group8.foodwizard.model.recipe.Recipe;
-import com.group8.foodwizard.model.formatter.JsonParser;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
@@ -19,6 +18,15 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class JsonParserTest {
 
+    /**
+     * A mock JSON string representing a list of available regions (areas)
+     * typically returned by TheMealDB API.
+     *
+     * Example areas included:
+     * - American
+     * - Italian
+     * - Mexican
+     */
     private static final String AREAS_JSON = """
                 {
                     "meals": [
@@ -29,6 +37,15 @@ class JsonParserTest {
                 }
             """;
 
+    /**
+     * A mock JSON string representing a list of meal categories
+     * typically returned by TheMealDB API.
+     *
+     * Example categories included:
+     * - Dessert
+     * - Seafood
+     * - Vegetarian
+     */
     private static final String CATEGORIES_JSON = """
                 {
                     "meals": [
@@ -39,17 +56,25 @@ class JsonParserTest {
                 }
             """;
 
+    /**
+     * A format string used to generate the URL for an ingredient image
+     * hosted on TheMealDB. The ingredient name is inserted using String.format().
+     *
+     * Example usage:
+     * {@code String.format(INGREDIENT_IMAGE, "Chicken")}
+     * results in {@code "www.themealdb.com/images/ingredients/Chicken-medium.png"}
+     */
     private static final String INGREDIENT_IMAGE = "www.themealdb.com/images/ingredients/%s-medium.png";
 
     @Test
     void extractIdMeal() throws IOException {
         // Test data in JSON format
-        String json = "{\n" +
-                "  \"meals\": [\n" +
-                "    {\"idMeal\": \"52940\"},\n" +
-                "    {\"idMeal\": \"52846\"}\n" +
-                "  ]\n" +
-                "}";
+        String json = "{\n"
+                + "  \"meals\": [\n"
+                + "    {\"idMeal\": \"52940\"},\n"
+                + "    {\"idMeal\": \"52846\"}\n"
+                + "  ]\n"
+                + "}";
 
         // Convert the JSON string to an InputStream
         InputStream inputStream = new ByteArrayInputStream(json.getBytes());
@@ -64,10 +89,10 @@ class JsonParserTest {
 
     @Test
     void extractIdMealFail() throws IOException {
-        String json = "{\n" +
-                "  \"meals\": [\n" +
-                "  ]\n" +
-                "}";
+        String json = "{\n"
+                + "  \"meals\": [\n"
+                + "  ]\n"
+                + "}";
         InputStream inputStream = new ByteArrayInputStream(json.getBytes());
         Set<Integer> mealIds = JsonParser.extractIdMeal(inputStream);
         assertEquals(0,mealIds.size());
@@ -90,14 +115,14 @@ class JsonParserTest {
     }
 
     @Test
-    void testExtractMeals_validJson() throws Exception {
-        String json = "{\n" +
-                "  \"meals\": [\n" +
-                "    {\"strMeal\": \"Chicken Couscous\",\n" +
-                "    \"strMealThumb\": \"https://www.themealdb.com/images/media/meals/qxytrx1511304021.jpg\",\n" +
-                "    \"idMeal\": \"52846\"}\n" +
-                "  ]\n" +
-                "}";
+    void testExtractMealsValidJson() throws Exception {
+        String json = "{\n"
+                + "  \"meals\": [\n"
+                + "    {\"strMeal\": \"Chicken Couscous\",\n"
+                + "    \"strMealThumb\": \"https://www.themealdb.com/images/media/meals/qxytrx1511304021.jpg\",\n"
+                + "    \"idMeal\": \"52846\"}\n"
+                + "  ]\n"
+                + "}";
         InputStream input = new ByteArrayInputStream(json.getBytes());
 
         Set<Meal> meals = JsonParser.extractMeals(input);
@@ -106,7 +131,7 @@ class JsonParserTest {
     }
 
     @Test
-    void testExtractMeals_emptyJson() throws Exception {
+    void testExtractMealsEmptyJson() throws Exception {
         String json = "{\"meals\":[]}";
         InputStream input = new ByteArrayInputStream(json.getBytes());
 
@@ -116,7 +141,7 @@ class JsonParserTest {
     }
 
     @Test
-    void testExtractMeals_missingMealsField() throws Exception {
+    void testExtractMealsMissingMealsField() throws Exception {
         String json = "{}";
         InputStream input = new ByteArrayInputStream(json.getBytes());
 
@@ -126,20 +151,20 @@ class JsonParserTest {
     }
 
     @Test
-    void testExtractRecipeData_validJson() throws Exception {
-        String json = "{\n" +
-                "  \"meals\": [\n" +
-                "    {\"idMeal\": \"52940\",\n" +
-                "    \"strMeal\": \"Pasta Carbonara\",\n" +
-                "    \"strCategory\": \"Italian\",\n" +
-                "    \"strArea\": \"Italy\",\n" +
-                "    \"strMealThumb\": \"https://www.themealdb.com/images/media/meals/llcbn01574260722.jpg\",\n" +
-                "    \"strYoutube\": \"https://www.youtube.com/watch?v=3AAdKl1UYZs\",\n" +
-                "    \"strInstructions\": \"Boil pasta and mix with sauce\",\n" +
-                "    \"strIngredient1\": \"Pasta\",\n" +
-                "    \"strMeasure1\": \"200g\"}\n" +
-                "  ]\n" +
-                "}";
+    void testExtractRecipeDataValidJson() throws Exception {
+        String json = "{\n"
+                + "  \"meals\": [\n"
+                + "    {\"idMeal\": \"52940\",\n"
+                + "    \"strMeal\": \"Pasta Carbonara\",\n"
+                + "    \"strCategory\": \"Italian\",\n"
+                + "    \"strArea\": \"Italy\",\n"
+                + "    \"strMealThumb\": \"https://www.themealdb.com/images/media/meals/llcbn01574260722.jpg\",\n"
+                + "    \"strYoutube\": \"https://www.youtube.com/watch?v=3AAdKl1UYZs\",\n"
+                + "    \"strInstructions\": \"Boil pasta and mix with sauce\",\n"
+                + "    \"strIngredient1\": \"Pasta\",\n"
+                + "    \"strMeasure1\": \"200g\"}\n"
+                + "  ]\n"
+                + "}";
         InputStream input = new ByteArrayInputStream(json.getBytes());
 
         Map<String, Object> recipeData = JsonParser.extractRecipeData(input);
@@ -165,19 +190,19 @@ class JsonParserTest {
 
     @Test
     void testEmptyIngredientList() throws IOException {
-        String json = "{\n" +
-                "  \"meals\": [\n" +
-                "    {\n" +
-                "      \"idMeal\": \"52940\",\n" +
-                "      \"strMeal\": \"Pasta Carbonara\",\n" +
-                "      \"strCategory\": \"Italian\",\n" +
-                "      \"strArea\": \"Italy\",\n" +
-                "      \"strMealThumb\": \"https://www.themealdb.com/images/media/meals/llcbn01574260722.jpg\",\n" +
-                "      \"strYoutube\": \"https://www.youtube.com/watch?v=3AAdKl1UYZs\",\n" +
-                "      \"strInstructions\": \"Boil pasta and mix with sauce\"\n" +
-                "    }\n" +  // <-- properly close the object
-                "  ]\n" +
-                "}";
+        String json = "{\n"
+                + "  \"meals\": [\n"
+                + "    {\n"
+                + "      \"idMeal\": \"52940\",\n"
+                + "      \"strMeal\": \"Pasta Carbonara\",\n"
+                + "      \"strCategory\": \"Italian\",\n"
+                + "      \"strArea\": \"Italy\",\n"
+                + "      \"strMealThumb\": \"https://www.themealdb.com/images/media/meals/llcbn01574260722.jpg\",\n"
+                + "      \"strYoutube\": \"https://www.youtube.com/watch?v=3AAdKl1UYZs\",\n"
+                + "      \"strInstructions\": \"Boil pasta and mix with sauce\"\n"
+                + "    }\n"  // <-- properly close the object
+                + "  ]\n"
+                + "}";
         InputStream input = new ByteArrayInputStream(json.getBytes());
         Map<String, Object> result = JsonParser.extractRecipeData(input);
         List<String> ingredientList = (List<String>) (result.get("ingredientsList"));
