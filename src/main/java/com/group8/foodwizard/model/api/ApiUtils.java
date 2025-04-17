@@ -1,7 +1,6 @@
 package com.group8.foodwizard.model.api;
 
 import com.group8.foodwizard.model.formatter.JsonParser;
-import com.group8.foodwizard.model.recipe.IRecipeModel;
 import com.group8.foodwizard.model.recipe.Meal;
 
 import java.io.IOException;
