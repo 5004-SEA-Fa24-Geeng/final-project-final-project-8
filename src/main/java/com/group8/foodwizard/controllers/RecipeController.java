@@ -45,7 +45,8 @@ public class RecipeController {
     /**
      * Retrieves all available recipe categories from the recipe model.
      *
-     * @return a set of category names as strings, or an empty set if an error occurs
+     * @return a set of category names as strings, or an empty set if an error
+     *         occurs
      */
     @GetMapping("/api/categories")
     public Set<String> getAllCategories() {
@@ -77,8 +78,10 @@ public class RecipeController {
     /**
      * Retrieves recipe previews (meals) that match the given filter criteria.
      *
-     * @param recipeRequest the request object containing ingredients, category, and region
-     * @return a set of Meal objects that match the filters, or an empty set if an error occurs
+     * @param recipeRequest the request object containing ingredients, category, and
+     *                      region
+     * @return a set of Meal objects that match the filters, or an empty set if an
+     *         error occurs
      */
     @PostMapping("/api/getRecipePreviews")
     public Set<Meal> getRecipePreviews(@RequestBody RecipeRequest recipeRequest) {
@@ -98,7 +101,8 @@ public class RecipeController {
      * Retrieves the full recipe for a given meal ID.
      *
      * @param mealId the ID of the meal to retrieve the recipe for
-     * @return the Recipe object corresponding to the meal ID, or null if an error occurs
+     * @return the Recipe object corresponding to the meal ID, or null if an error
+     *         occurs
      */
     @GetMapping("/api/recipe/{mealId}")
     public Recipe getRecipeByIdMeal(@PathVariable int mealId) {

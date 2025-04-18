@@ -59,21 +59,6 @@ public class SpaWebMvcConfigurer implements WebMvcConfigurer {
     // Helper method to avoid forwarding API calls to index.html
     // Adjust the pattern based on your API paths
     private boolean isApiRequest(String path) {
-        return path.startsWith("/api/") || path.startsWith("/actuator/"); // Add other API prefixes if needed
+        return path.startsWith("/api/"); // Add other API prefixes if needed
     }
-
-    // Optional: If you ONLY want to handle specific frontend routes like /recipe/**
-    // You could use addViewControllers instead or in combination, but the
-    // resource resolver approach above is generally more robust for SPAs.
-    /*
-     * @Override
-     * public void addViewControllers(ViewControllerRegistry registry) {
-     * // Forward requests like /recipe/*, /user/* etc. to index.html
-     * // Note: This requires more specific path patterns.
-     * registry.addViewController("/recipe/**").setViewName("forward:/index.html");
-     * registry.addViewController("/other-spa-route/**").setViewName(
-     * "forward:/index.html");
-     * // Add more patterns as needed for your SPA routes
-     * }
-     */
 }
