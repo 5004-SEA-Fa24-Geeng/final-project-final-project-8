@@ -12,15 +12,30 @@ import org.junit.jupiter.api.Test;
 
 import com.group8.foodwizard.model.recipe.Ingredient;
 
+/**
+ * Test class for {@link RecipeRequest}.
+ */
 public class RecipeRequestTest {
 
+    /**
+     * The RecipeRequest instance used for testing.
+     */
     private RecipeRequest recipeRequest;
 
+    /**
+     * Sets up the test environment before each test method.
+     * Initializes a new RecipeRequest object.
+     */
     @BeforeEach
     public void setUp() {
         recipeRequest = new RecipeRequest();
     }
 
+    /**
+     * Tests the default constructor of RecipeRequest.
+     * Verifies that the ingredients set is initialized and empty,
+     * and that region and category are null.
+     */
     @Test
     public void testDefaultConstructor() {
         assertNotNull(recipeRequest.getIngredients());
@@ -29,6 +44,11 @@ public class RecipeRequestTest {
         assertEquals(null, recipeRequest.getCategory());
     }
 
+    /**
+     * Tests the getter and setter for the region property.
+     * Verifies that the region can be set and retrieved correctly,
+     * including handling null values.
+     */
     @Test
     public void testRegionGetterAndSetter() {
         String testRegion = "Italian";
@@ -40,6 +60,11 @@ public class RecipeRequestTest {
         assertEquals(null, recipeRequest.getRegion());
     }
 
+    /**
+     * Tests the getter and setter for the category property.
+     * Verifies that the category can be set and retrieved correctly,
+     * including handling null values.
+     */
     @Test
     public void testCategoryGetterAndSetter() {
         String testCategory = "Dessert";
@@ -51,6 +76,11 @@ public class RecipeRequestTest {
         assertEquals(null, recipeRequest.getCategory());
     }
 
+    /**
+     * Tests the getter and setter for the ingredients property.
+     * Verifies that the ingredients set can be set and retrieved correctly,
+     * including handling empty sets and null values.
+     */
     @Test
     public void testIngredientsGetterAndSetter() {
         // Create test ingredients set
@@ -75,6 +105,11 @@ public class RecipeRequestTest {
         assertEquals(null, recipeRequest.getIngredients());
     }
 
+    /**
+     * Tests setting all properties of the RecipeRequest object.
+     * Verifies that region, category, and ingredients can be set together
+     * and retrieved correctly.
+     */
     @Test
     public void testCompleteRequest() {
         // Create a complete request object

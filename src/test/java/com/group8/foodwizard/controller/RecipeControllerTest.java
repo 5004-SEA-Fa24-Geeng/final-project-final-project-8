@@ -23,18 +23,30 @@ import com.group8.foodwizard.model.recipe.Recipe;
 import com.group8.foodwizard.model.recipe.RecipeModel;
 import com.group8.foodwizard.model.requests.RecipeRequest;
 
+/**
+ * Test class for RecipeController.
+ */
 @SpringBootTest
 public class RecipeControllerTest {
 
+    /** The RecipeController instance to test. */
     private RecipeController recipeController;
+    /** The mocked RecipeModel instance. */
     private RecipeModel mockModel;
 
+    /**
+     * Sets up the test environment before each test.
+     * Initializes the RecipeController and mocks the RecipeModel.
+     */
     @BeforeEach
     public void setUp() {
         recipeController = new RecipeController();
         mockModel = mock(RecipeModel.class);
     }
 
+    /**
+     * Tests the getAllIngredients method for successful retrieval.
+     */
     @Test
     public void testGetAllIngredients() {
         // Create test data
@@ -58,6 +70,11 @@ public class RecipeControllerTest {
         }
     }
 
+    /**
+     * Tests the getAllIngredients method when an IOException occurs during model
+     * initialization.
+     * Expects an empty set as a result.
+     */
     @Test
     public void testGetAllIngredientsWithIOException() {
         try (MockedStatic<RecipeModel> mockedStatic = Mockito.mockStatic(RecipeModel.class)) {
@@ -73,6 +90,9 @@ public class RecipeControllerTest {
         }
     }
 
+    /**
+     * Tests the getAllCategories method for successful retrieval.
+     */
     @Test
     public void testGetAllCategories() {
         // Create test data
@@ -96,6 +116,11 @@ public class RecipeControllerTest {
         }
     }
 
+    /**
+     * Tests the getAllCategories method when an IOException occurs during model
+     * initialization.
+     * Expects an empty set as a result.
+     */
     @Test
     public void testGetAllCategoriesWithIOException() {
         try (MockedStatic<RecipeModel> mockedStatic = Mockito.mockStatic(RecipeModel.class)) {
@@ -111,6 +136,9 @@ public class RecipeControllerTest {
         }
     }
 
+    /**
+     * Tests the getAllRegions method for successful retrieval.
+     */
     @Test
     public void testGetAllRegions() {
         // Create test data
@@ -134,6 +162,11 @@ public class RecipeControllerTest {
         }
     }
 
+    /**
+     * Tests the getAllRegions method when an IOException occurs during model
+     * initialization.
+     * Expects an empty set as a result.
+     */
     @Test
     public void testGetAllRegionsWithIOException() {
         try (MockedStatic<RecipeModel> mockedStatic = Mockito.mockStatic(RecipeModel.class)) {
@@ -149,6 +182,10 @@ public class RecipeControllerTest {
         }
     }
 
+    /**
+     * Tests the getRecipePreviews method for successful retrieval based on request
+     * criteria.
+     */
     @Test
     public void testGetRecipePreviews() {
         // Create test data
@@ -187,6 +224,11 @@ public class RecipeControllerTest {
         }
     }
 
+    /**
+     * Tests the getRecipePreviews method when an IOException occurs during model
+     * initialization.
+     * Expects an empty set as a result.
+     */
     @Test
     public void testGetRecipePreviewsWithIOException() {
         // Create test request
@@ -210,6 +252,10 @@ public class RecipeControllerTest {
         }
     }
 
+    /**
+     * Tests the getRecipeByIdMeal method for successful retrieval of a specific
+     * recipe.
+     */
     @Test
     public void testGetRecipeByIdMeal() {
         int mealId = 52823;
@@ -241,6 +287,11 @@ public class RecipeControllerTest {
         }
     }
 
+    /**
+     * Tests the getRecipeByIdMeal method when an IOException occurs during model
+     * initialization.
+     * Expects a null result.
+     */
     @Test
     public void testGetRecipeByIdMealWithIOException() {
         // Test data
