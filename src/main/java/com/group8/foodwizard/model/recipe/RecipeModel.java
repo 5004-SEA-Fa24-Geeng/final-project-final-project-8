@@ -9,9 +9,9 @@ import com.group8.foodwizard.model.recipe.strategy.IGetMealStrategy;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
-public class RecipeModel implements IRecipeModel {
+
+public final class RecipeModel implements IRecipeModel {
 
     /** A set of all ingredients. */
     private final Set<Ingredient> allIngredients;
@@ -23,13 +23,13 @@ public class RecipeModel implements IRecipeModel {
     private final Set<String> allCategories;
 
     /** A set of ingredients the user selected. */
-    Set<Ingredient> userIngredients;
+    private Set<Ingredient> userIngredients;
 
     /** The category that the user selected. */
-    String userCategory;
+    private String userCategory;
 
     /** The area that the user selected. */
-    String userArea;
+    private String userArea;
 
     /** The only instance of RecipeModel. */
     private static RecipeModel instance = null;
@@ -66,7 +66,7 @@ public class RecipeModel implements IRecipeModel {
         return instance;
     }
 
-    /** Helper for testing only: reset the singleton */
+    /** Helper for testing only: reset the singleton. */
     static void resetInstanceForTest() {
         instance = null;
     }
@@ -105,16 +105,16 @@ public class RecipeModel implements IRecipeModel {
     /**
      * Processes meals based on user-selected ingredients, category, and area.
      *
-     * @param userIngredients the user-selected ingredients
+     * @param ingredients the user-selected ingredients
      * @param category        the user-selected category
      * @param area            the user-selected area
      * @return a set of meals matching the user-selected params
      * @throws IOException if data fetching fails
      */
     @Override
-    public Set<Meal> processMeals(Set<Ingredient> userIngredients, String category, String area) throws IOException {
+    public Set<Meal> processMeals(Set<Ingredient> ingredients, String category, String area) throws IOException {
         // pass user-selected filters into the model
-        setUserIngredients(userIngredients);
+        setUserIngredients(ingredients);
         setUserCategory(category);
         setUserArea(area);
 
@@ -122,9 +122,15 @@ public class RecipeModel implements IRecipeModel {
         List<IGetMealStrategy> strategies = new ArrayList<>();  // to collect all strategies for strategy pattern
 
         // select strategies based on user-selected filters (ingredients, category, area)
-        if (userIngredients != null) { strategies.add(new GetMealByIngredient(userIngredients, cachedMealFetcher)); }
-        if (userCategory != null) { strategies.add(new GetMealByCategory(userCategory, cachedMealFetcher)); }
-        if (userArea != null) { strategies.add(new GetMealByArea(userArea, cachedMealFetcher)); }
+        if (this.userIngredients != null) {
+            strategies.add(new GetMealByIngredient(this.userIngredients, cachedMealFetcher));
+        }
+        if (this.userCategory != null) {
+            strategies.add(new GetMealByCategory(this.userCategory, cachedMealFetcher));
+        }
+        if (this.userArea != null) {
+            strategies.add(new GetMealByArea(this.userArea, cachedMealFetcher));
+        }
 
         for (IGetMealStrategy strategy : strategies) {
             mealSets.add(strategy.getMeals());  // execute interchangeable behaviors (getMeals() is abstract)
@@ -242,8 +248,11 @@ public class RecipeModel implements IRecipeModel {
      * Internal nested class for caching meal fetch results to avoid redundant API calls.
      */
     public static class CachedMealFetcher {
+        /** A map of the ingredient name and the set of meals using that ingredient. */
         private final Map<String, Set<Meal>> ingredientCache = new HashMap<>();
+        /** A map of the category name and the set of meals filtered by that category. */
         private final Map<String, Set<Meal>> categoryCache = new HashMap<>();
+        /** A map of the area name and the set of meals filtered by that area. */
         private final Map<String, Set<Meal>> areaCache = new HashMap<>();
 
         /**

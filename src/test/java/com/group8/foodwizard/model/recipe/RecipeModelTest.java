@@ -19,16 +19,28 @@ import org.mockito.Mockito;
 
 class RecipeModelTest {
 
+    /** A mock instance of the singleton RecipeModel used for testing. */
     private RecipeModel mockModel;
+    /** A sample ingredient representing "Chicken". */
     private Ingredient ingredient1;
+    /** A sample ingredient representing "Rice". */
     private Ingredient ingredient2;
+    /** A sample ingredient representing "Garlic". */
     private Ingredient ingredient3;
+    /** A sample meal: "Chicken Alfredo Primavera". */
     private Meal meal1;
+    /** A sample meal: "Chicken Congee". */
     private Meal meal2;
+    /** A sample meal: "Pasta". */
     private Meal meal3;
-    CachedMealFetcher fetcher;
+    /** An instance of the CachedMealFetcher for testing caching logic. */
+    private CachedMealFetcher fetcher;
 
-
+    /**
+     * Initializes common objects before each test case.
+     *
+     * @throws IOException if data fetching fails during model initialization
+     */
     @BeforeEach
     void setUp() throws IOException {
         RecipeModel.resetInstanceForTest(); // Clear the existing singleton instance
@@ -38,13 +50,17 @@ class RecipeModelTest {
         ingredient2 = new Ingredient("268", "Rice", "");
         ingredient3 = new Ingredient("149", "Garlic", "");
 
-        meal1 = new Meal("Chicken Alfredo Primavera", "https://www.themealdb.com/images/media/meals/syqypv1486981727.jpg", "52796");
-        meal2 = new Meal("Chicken Congee", "https://www.themealdb.com/images/media/meals/1529446352.jpg", "52956");
+        meal1 = new Meal("Chicken Alfredo Primavera",
+                "https://www.themealdb.com/images/media/meals/syqypv1486981727.jpg", "52796");
+        meal2 = new Meal("Chicken Congee",
+                "https://www.themealdb.com/images/media/meals/1529446352.jpg", "52956");
         meal3 = new Meal("Pasta", "thumb3", "103");
 
         fetcher = new CachedMealFetcher();
     }
 
+
+    /** Tests that RecipeModel uses the Singleton pattern. */
     @Test
     public void testSingletonReturnsSameInstance() throws IOException {
         RecipeModel instance1 = RecipeModel.getInstance();
@@ -54,24 +70,29 @@ class RecipeModelTest {
         assertSame(instance1, instance2, "Both instances should be the same (singleton)");
     }
 
+    /** Verifies that all ingredients are loaded correctly. */
     @Test
     void testGetAllIngredients() {
         int exepctedAllIngredientsNumber = 575;
         assertEquals(exepctedAllIngredientsNumber, mockModel.getAllIngredients().size());
     }
 
+    /** Verifies that all categories are loaded correctly. */
     @Test
     void testGetAllCategories() {
         System.out.println(mockModel.getAllCategories());
         assertTrue(mockModel.getAllCategories().contains("Seafood"));
     }
 
+    /** Verifies that all areas are loaded correctly. */
     @Test
     void testGetAllAreas() {
         System.out.println(mockModel.getAllAreas());
         assertTrue(mockModel.getAllAreas().contains("Italian"));
     }
 
+    /** Verifies that the correct intersection meals are returned
+     * when meals are shared based on user-selected filters. */
     @Test
     void testFindIntersection() {
         List<Set<Meal>> sets = List.of(
@@ -85,6 +106,7 @@ class RecipeModelTest {
         assertTrue(result.contains(meal1));
     }
 
+    /** Verifies that findIntersection returns an empty set when given an empty list. */
     @Test
     void testFindIntersectionWithEmptySet() {
         List<Set<Meal>> sets = List.of();
@@ -92,6 +114,11 @@ class RecipeModelTest {
         assertEquals(0, result.size());
     }
 
+    /**
+     * Verifies retrieval of a complete recipe by meal ID.
+     *
+     * @throws IOException if recipe retrieval fails
+     */
     @Test
     void testGetRecipeByIdMeal() throws IOException {
         Recipe recipe = mockModel.getRecipeByIdMeal(Integer.parseInt(meal1.idMeal()));
@@ -100,8 +127,9 @@ class RecipeModelTest {
         assertEquals("Chicken Alfredo Primavera", recipe.recipeName());
     }
 
-
-    // 1. Single ingredient, no category, no area
+    /**
+     * Tests processing: 1. Single ingredient, no category, no area
+     */
     @Test
     void testSingleIngredientOnly() throws IOException {
         Set<Ingredient> userIngredients = Set.of(ingredient2);
@@ -110,7 +138,9 @@ class RecipeModelTest {
         assertTrue(result.contains(meal2));
     }
 
-    // 2. Two ingredients, no category, no area
+    /**
+     * Tests processing: 2. Two ingredients, no category, no area
+     */
     @Test
     void testTwoIngredientsOnly() throws IOException {
         // ingredient 1: chicken
@@ -123,14 +153,24 @@ class RecipeModelTest {
         assertTrue(result.contains(meal2));
     }
 
-    // 3. Single ingredient + one category, no area
+    /**
+     * Tests processing: 3. Single ingredient + one category, no area
+     */
     @Test
     void testSingleIngredientAndCategory() throws IOException {
         // ingredient3 = garlic
         Set<Meal> result = mockModel.processMeals(Set.of(ingredient3), "Pasta", null);
         System.out.println(result);
         // Set<Meal> findIntersection(List<Set<Meal>> mealSets)
-        String expectedResult = "[Meal[mealName=Lasagne, mealImg=https://www.themealdb.com/images/media/meals/wtsvxx1511296896.jpg, idMeal=52844], Meal[mealName=Pilchard puttanesca, mealImg=https://www.themealdb.com/images/media/meals/vvtvtr1511180578.jpg, idMeal=52837], Meal[mealName=Venetian Duck Ragu, mealImg=https://www.themealdb.com/images/media/meals/qvrwpt1511181864.jpg, idMeal=52838]]";
+        String expectedResult = "[Meal[mealName=Lasagne, "
+                + "mealImg=https://www.themealdb.com/images/media/meals/wtsvxx1511296896.jpg, "
+                + "idMeal=52844], "
+                + "Meal[mealName=Pilchard puttanesca, "
+                + "mealImg=https://www.themealdb.com/images/media/meals/vvtvtr1511180578.jpg, "
+                + "idMeal=52837], "
+                + "Meal[mealName=Venetian Duck Ragu, "
+                + "mealImg=https://www.themealdb.com/images/media/meals/qvrwpt1511181864.jpg, "
+                + "idMeal=52838]]";
         Set<Meal> expectedIntersection = mockModel.findIntersection(
                 List.of(mockModel.getMealsByIngredient(Set.of(ingredient3)),
                         mockModel.getMealsByCategory("Pasta"))
@@ -140,7 +180,9 @@ class RecipeModelTest {
 
     }
 
-    // 4. Two ingredients + one area, no category
+    /**
+     * Tests processing: 4. Two ingredients + one area, no category
+     */
     @Test
     void testTwoIngredientsAndArea() throws IOException {
         // ingredient 1: chicken
@@ -154,7 +196,9 @@ class RecipeModelTest {
         assertEquals(expected, result);
     }
 
-    // 5. Single ingredient + one category + one area
+    /**
+     * Tests processing: 5. Single ingredient + one category + one area
+     */
     @Test
     void testSingleIngredientCategoryArea() throws IOException {
         Set<Meal> result = mockModel.processMeals(Set.of(ingredient1), "Pasta", "Italian");
@@ -165,15 +209,18 @@ class RecipeModelTest {
         assertEquals(expected, result);
     }
 
-
-    // 7. No ingredients, no category, no area
+    /**
+     * Tests processing: 6. No ingredients, no category, no area
+     */
     @Test
     void testNoInputs() throws IOException {
         Set<Meal> result = mockModel.processMeals(null, null, null);
         assertTrue(result.isEmpty());
     }
 
-    // 8. No ingredients, one category, no area
+    /**
+     * Tests processing: 7.  No ingredients, one category, no area
+     */
     @Test
     void testOnlyCategory() throws IOException {
         Set<Meal> result = mockModel.processMeals(null, "Pasta", null);
@@ -181,7 +228,9 @@ class RecipeModelTest {
         assertFalse(result.isEmpty());
     }
 
-    // 9. No ingredients, no category, one area
+    /**
+     * Tests processing: 8. No ingredients, no category, one area
+     */
     @Test
     void testOnlyArea() throws IOException {
         Set<Meal> result = mockModel.processMeals(null, null, "Italian");
@@ -189,7 +238,9 @@ class RecipeModelTest {
         assertFalse(result.isEmpty());
     }
 
-    // 10. No ingredients, one category, one area
+    /**
+     * Tests processing: 9. No ingredients, one category, one area
+     */
     @Test
     void testOnlyCategoryAndArea() throws IOException {
         Set<Meal> result = mockModel.processMeals(null, "Pasta", "Italian");
@@ -200,9 +251,12 @@ class RecipeModelTest {
 
     }
 
-    // This test is generated by ChatGPT
+    /**
+     * Ensures getMealsByIngredient handles the exception and returns an empty set.
+     * This test is generated by ChatGPT.
+     */
     @Test
-    void testGetMealsByIngredient_whenIOException_thenReturnsEmptySet() {
+    void testGetMealsByIngredientWhenIOExceptionThenReturnsEmptySet() {
         Ingredient fakeIngredient = new Ingredient("1", "Chicken", "image.png");
         Set<Ingredient> ingredients = Set.of(fakeIngredient);
 
@@ -215,9 +269,12 @@ class RecipeModelTest {
         }
     }
 
-    // This test is generated by ChatGPT
+    /**
+     * Ensures getMealsByCategory handles the exception and returns an empty set.
+     * This test is generated by ChatGPT.
+     */
     @Test
-    void testGetMealsByCategory_whenIOException_thenReturnsEmptySet() {
+    void testGetMealsByCategoryWhenIOExceptionThenReturnsEmptySet() {
         String category = "Seafood";
 
         try (
@@ -240,9 +297,12 @@ class RecipeModelTest {
         }
     }
 
-    // This test is generated by ChatGPT
+    /**
+     * Ensures getMealsByArea handles the exception and returns an empty set.
+     * This test is generated by ChatGPT.
+     */
     @Test
-    void testGetMealsByArea_whenIOException_thenReturnsEmptySet() {
+    void testGetMealsByAreaWhenIOExceptionThenReturnsEmptySet() {
         String area = "Italian";
 
         try (
@@ -265,7 +325,10 @@ class RecipeModelTest {
         }
     }
 
-    // This test is generated by ChatGPT
+    /**
+     * Verifies caching behavior of getMealsByIngredient.
+     * This test is generated by ChatGPT.
+     */
     @Test
     void testIngredientCaching() {
         CachedMealFetcher fetcher = new CachedMealFetcher();
@@ -291,7 +354,10 @@ class RecipeModelTest {
         }
     }
 
-    // This test is generated by ChatGPT
+    /**
+     * Verifies caching behavior of getMealsByCategory.
+     * This test is generated by ChatGPT.
+     */
     @Test
     void testCategoryCaching() {
         CachedMealFetcher fetcher = new CachedMealFetcher();
@@ -313,7 +379,10 @@ class RecipeModelTest {
         }
     }
 
-    // This test is generated by ChatGPT
+    /**
+     * Verifies caching behavior of getMealsByArea.
+     * This test is generated by ChatGPT.
+     */
     @Test
     void testAreaCaching() {
         CachedMealFetcher fetcher = new CachedMealFetcher();
