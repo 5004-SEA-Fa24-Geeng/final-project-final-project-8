@@ -25,10 +25,6 @@ dependencies {
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
-//tasks.named('test') {
-//	useJUnitPlatform()
-//}
-
 checkstyle {
 	configFile = file("${rootDir}/checkstyle-rules.xml")
 	sourceSets = [sourceSets.main]
@@ -40,7 +36,7 @@ jacoco {
 
 jacocoTestReport {
 	reports {
-		html.destination file("${buildDir}/jacocoHtml")
+		html.outputLocation = file("${buildDir}/jacocoHtml")
 	}
 	doLast {
 		String fixedBuildDir = buildDir.toString().replace('\\', '/')

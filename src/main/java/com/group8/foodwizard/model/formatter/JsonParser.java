@@ -13,8 +13,10 @@ import java.io.InputStream;
 import java.util.*;
 
 /**
- * Utility class for parsing JSON data related to meals, ingredients, areas, and categories.
- * Provides methods to extract idMeal, single recipe data, AllIngredients, AllAreas, and AllCategories from
+ * Utility class for parsing JSON data related to meals, ingredients, areas, and
+ * categories.
+ * Provides methods to extract idMeal, single recipe data, AllIngredients,
+ * AllAreas, and AllCategories from
  * the provided JSON input streams.
  */
 public final class JsonParser {
@@ -33,15 +35,18 @@ public final class JsonParser {
      * Private constructor to prevent instantiation.
      */
     private JsonParser() {
-        //empty
+        // empty
     }
 
     /**
-     * Extracts all meal IDs from the provided input stream containing meal data in JSON format.
+     * Extracts all meal IDs from the provided input stream containing meal data in
+     * JSON format.
      *
-     * @param inputStream the input stream containing JSON data with meal information
+     * @param inputStream the input stream containing JSON data with meal
+     *                    information
      * @return a set of meal IDs
-     * @throws IOException if an error occurs while reading or parsing the input stream
+     * @throws IOException if an error occurs while reading or parsing the input
+     *                     stream
      */
     public static Set<Integer> extractIdMeal(InputStream inputStream) throws IOException {
         Set<Integer> mealIds = new HashSet<>();
@@ -58,10 +63,12 @@ public final class JsonParser {
     }
 
     /**
-     * Extracts a set of {@link Meal} objects from a JSON-formatted {@link InputStream}.
+     * Extracts a set of {@link Meal} objects from a JSON-formatted
+     * {@link InputStream}.
      * <p>
      * The input stream is expected to contain a JSON object with a "meals" array,
-     * where each meal object includes "strMeal", "strMealThumb", and "idMeal" fields.
+     * where each meal object includes "strMeal", "strMealThumb", and "idMeal"
+     * fields.
      * If the "meals" array is empty or not present, an empty set is returned.
      *
      * @param input the input stream containing JSON data from an API or file
@@ -86,12 +93,15 @@ public final class JsonParser {
     }
 
     /**
-     * Extracts single recipe data from the provided input stream, and stores the data into a map.
+     * Extracts single recipe data from the provided input stream, and stores the
+     * data into a map.
      *
      * @param input the input stream containing JSON data with meal information
-     * @return a map containing the extracted recipe data, including recipe ID, name, category,
+     * @return a map containing the extracted recipe data, including recipe ID,
+     *         name, category,
      *         area, image, YouTube URL, instructions, ingredients, and measures
-     * @throws IOException if an error occurs while reading or parsing the input stream
+     * @throws IOException if an error occurs while reading or parsing the input
+     *                     stream
      */
     public static Map<String, Object> extractRecipeData(InputStream input) throws IOException {
         Map<String, Object> recipeData = new HashMap<>();
@@ -129,7 +139,8 @@ public final class JsonParser {
     /**
      * Maps a map of recipe data to a single Recipe object.
      *
-     * @param recipeData a map containing recipe data (e.g., ID, name, category, area, ingredients)
+     * @param recipeData a map containing recipe data (e.g., ID, name, category,
+     *                   area, ingredients)
      * @return a single Recipe object
      */
     public static Recipe mapToRecipe(Map<String, Object> recipeData) {
@@ -140,7 +151,9 @@ public final class JsonParser {
         String instructions = (String) recipeData.get("instructions");
         String youtube = (String) recipeData.get("youtube");
         String image = (String) recipeData.get("image");
+        @SuppressWarnings("unchecked")
         List<String> ingredients = (List<String>) recipeData.get("ingredientsList");
+        @SuppressWarnings("unchecked")
         List<String> measures = (List<String>) recipeData.get("measuresList");
 
         return new Recipe(recipeId, recipeName, instructions, image, youtube, category, area, ingredients, measures);
@@ -149,9 +162,12 @@ public final class JsonParser {
     /**
      * Extracts all ingredients from JSON format to a set of Ingredient object.
      *
-     * @param input the input stream containing JSON data with ingredient information
-     * @return a full set of Ingredient objects containing ingredient ID, name, and image URL
-     * @throws IOException if an error occurs while reading or parsing the input stream
+     * @param input the input stream containing JSON data with ingredient
+     *              information
+     * @return a full set of Ingredient objects containing ingredient ID, name, and
+     *         image URL
+     * @throws IOException if an error occurs while reading or parsing the input
+     *                     stream
      */
     public static Set<Ingredient> allIngredientsList(InputStream input) throws IOException {
         // Ingredient(int idIngredient, String strIngredient, String strImage)
@@ -178,7 +194,8 @@ public final class JsonParser {
      *
      * @param input the input stream containing JSON data with meal information
      * @return a full set of area names
-     * @throws IOException if an error occurs while reading or parsing the input stream
+     * @throws IOException if an error occurs while reading or parsing the input
+     *                     stream
      */
     public static Set<String> allAreasList(InputStream input) throws IOException {
         // InputStream input = ApiUtils.getAllAreas();
@@ -199,7 +216,8 @@ public final class JsonParser {
      *
      * @param input the input stream containing JSON data with meal information
      * @return a full set of category names
-     * @throws IOException if an error occurs while reading or parsing the input stream
+     * @throws IOException if an error occurs while reading or parsing the input
+     *                     stream
      */
     public static Set<String> allCategoriesList(InputStream input) throws IOException {
         // InputStream input = ApiUtils.getAllCategories();
